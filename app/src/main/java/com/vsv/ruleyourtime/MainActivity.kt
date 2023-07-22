@@ -1,7 +1,9 @@
 package com.vsv.ruleyourtime
 
+
 import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.text.format.DateFormat
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -49,8 +51,8 @@ fun RuleYourTimeApp(
     var showTimePicker by remember {
         mutableStateOf(false)
     }
-    val state = rememberTimePickerState(is24Hour = false)
     val context = LocalContext.current
+    val state = rememberTimePickerState(is24Hour = DateFormat.is24HourFormat(context))
     val scheduler =  AlarmScheduler(context)
     val viewModel = viewModel<AlarmsScreenViewModel>()
 
@@ -65,6 +67,12 @@ fun RuleYourTimeApp(
         ) {
             Text(text = "Open TimePicker")
         }
+        Button(
+            onClick = { scheduler.disable() },
+            modifier = Modifier
+        ) {
+            Text(text = "next alarm")
+        }
     }
     if (showTimePicker) {
         DatePickerDialog(
@@ -72,8 +80,10 @@ fun RuleYourTimeApp(
             confirmButton = {
                 TextButton(
                     onClick = {
+                        Log.d(TAG, "h: ${state.hour}, m: ${state.minute}, 24: ${state.is24hour}")
                         viewModel.getTimeMillis(state.hour, state.minute)
                         scheduler.schedule(viewModel.item.value)
+                        Log.d(TAG, "RuleYourTimeApp: ${viewModel.item.value.hashCode()}")
                         Log.d(TAG, "RuleYourTimeApp: ${viewModel.item.value}")
                         showTimePicker = false
                     }

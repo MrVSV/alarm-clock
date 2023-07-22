@@ -4,6 +4,9 @@
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
         android:name=".App"
@@ -17,6 +20,12 @@
         android:theme="@style/Theme.RuleYourTime"
         tools:targetApi="31">
         <activity
+            android:name=".AlarmActivity"
+            android:exported="false"
+            android:label="@string/title_activity_alarm"
+            android:showOnLockScreen="true"
+            android:theme="@style/Theme.RuleYourTime" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.RuleYourTime">
@@ -26,7 +35,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name=".alarmclock.AlarmReceiver"/>
+        <receiver android:name=".alarmclock.AlarmReceiver" />
+        <service android:name=".alarmclock.AlarmService" />
     </application>
 
 </manifest>

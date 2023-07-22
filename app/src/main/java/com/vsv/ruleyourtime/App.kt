@@ -1,12 +1,12 @@
 package com.vsv.ruleyourtime
 
 import android.app.Application
-import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.Context
-import com.vsv.ruleyourtime.alarmclock.NotificationService
+import androidx.core.app.NotificationChannelCompat
+import androidx.core.app.NotificationManagerCompat
+import com.vsv.ruleyourtime.alarmclock.AlarmNotification
 
-class App: Application() {
+class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
@@ -14,12 +14,16 @@ class App: Application() {
     }
 
     private fun createNotificationChanel() {
-        val channel = NotificationChannel(
-            NotificationService.AlARM_CHANNEL_ID,
-            "Active Alarms",
-            NotificationManager.IMPORTANCE_HIGH
+        val channel = NotificationChannelCompat.Builder(
+            AlarmNotification.AlARM_CHANNEL_ID,
+            NotificationManager.IMPORTANCE_MAX
         )
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            .setName("Active Alarms")
+            .setSound(null, null)
+            .setVibrationEnabled(true)
+            .build()
+
+        val notificationManager = NotificationManagerCompat.from(applicationContext)
         notificationManager.createNotificationChannel(channel)
     }
 }
