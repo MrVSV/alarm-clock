@@ -13,13 +13,14 @@ import java.util.Locale
 
 class AlarmNotification(
     private val context: Context,
-) {
+): AppNotification {
+
     private fun convertAlarmTime(millis: Long): String {
         val pattern = if (DateFormat.is24HourFormat(context)) "HH:mm" else "HH:mm a"
         return SimpleDateFormat(pattern, Locale.getDefault()).format(millis)
     }
 
-    fun showNotification(item: AlarmItem): Notification {
+    override fun getNotification(item: AlarmItem): Notification {
         val activityIntent = Intent(context, AlarmActivity::class.java)
         val pendingIntent =
             PendingIntent.getActivity(

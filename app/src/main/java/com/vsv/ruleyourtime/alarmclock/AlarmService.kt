@@ -10,9 +10,11 @@ import android.media.RingtoneManager
 import android.os.IBinder
 import android.util.Log
 import com.vsv.ruleyourtime.utils.parcelable
+import org.koin.android.ext.android.inject
 
 class AlarmService : Service() {
 
+    private val notification: AppNotification by inject()
     private lateinit var mediaPlayer: MediaPlayer
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -36,10 +38,9 @@ class AlarmService : Service() {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        val notification = AlarmNotification(this)
         val item = intent.parcelable<AlarmItem>("alarm_item")
         if (item != null) {
-            startForeground(1, notification.showNotification(item))
+            startForeground(1, notification.getNotification(item))
         }
         when (intent.action) {
             AlarmServiceCommands.START.toString() -> mediaPlayer.start()

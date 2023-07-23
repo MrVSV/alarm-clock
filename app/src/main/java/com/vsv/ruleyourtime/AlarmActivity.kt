@@ -21,7 +21,6 @@ class AlarmActivity : ComponentActivity() {
         turnScreenOnAndKeyguardOff()
         setContent {
             RuleYourTimeTheme {
-                Text(text = "alarm activity")
                 Button(
                     onClick = {
                         Intent(this, AlarmService::class.java).also{
