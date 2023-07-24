@@ -6,7 +6,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.vsv.ruleyourtime.AlarmsScreenViewModel
 import com.vsv.ruleyourtime.ui.AlarmsScreen
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun Navigation(
@@ -20,8 +22,10 @@ fun Navigation(
         composable(
             route = Destinations.AlarmsScreen.name
         ) {
+            val viewModel = koinViewModel<AlarmsScreenViewModel>()
             AlarmsScreen(
-                navController = navController
+                navController = navController,
+                viewModel = viewModel
             )
         }
     }

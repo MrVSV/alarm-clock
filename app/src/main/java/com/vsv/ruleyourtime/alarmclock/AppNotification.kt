@@ -4,5 +4,5 @@ import android.app.Notification
 
 interface AppNotification {
 
-    fun getNotification(item: AlarmItem): Notification
+    fun getNotification(itemId: Int): Notification
 }

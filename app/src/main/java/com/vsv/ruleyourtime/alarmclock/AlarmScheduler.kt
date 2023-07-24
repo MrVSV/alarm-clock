@@ -8,17 +8,19 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.vsv.ruleyourtime.MainActivity
+import com.vsv.ruleyourtime.localdb.AlarmItemEntity
 
 class AlarmScheduler(
     private val context: Context,
+    private val calendar: MyCalendar
 ) : Scheduler {
 
     private val alarmManager = context.getSystemService(AlarmManager::class.java)
 
-    override fun schedule(item: AlarmItem) {
+    override fun schedule(entity: AlarmItemEntity) {
         alarmManager.setAlarmClock(
-            setAlarmInfo(item),
-            setAlarmPendingIntent(item)
+            setAlarmInfo(entity),
+            setAlarmPendingIntent(entity)
         )
     }
 
@@ -26,29 +28,30 @@ class AlarmScheduler(
         Log.d(TAG, "disable: ${alarmManager.nextAlarmClock?.triggerTime}")
     }
 
-    override fun cancel(item: AlarmItem) {
+    override fun cancel(entity: AlarmItemEntity) {
 
     }
 
-    private fun setAlarmInfo(item: AlarmItem): AlarmClockInfo {
+    private fun setAlarmInfo(entity: AlarmItemEntity): AlarmClockInfo {
         val alarmInfoIntent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
         val alarmInfoPendingIntent = PendingIntent.getActivity(
-            context, 0, alarmInfoIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            context, entity.id, alarmInfoIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
+        Log.d(TAG, "setAlarmInfo: ${entity.hours}:${entity.minutes}")
         return AlarmClockInfo(
-            item.alarmTimeMillis,
+            calendar.convertToMillis(entity.hours, entity.minutes),
             alarmInfoPendingIntent
         )
     }
 
-    private fun setAlarmPendingIntent(item: AlarmItem): PendingIntent {
+    private fun setAlarmPendingIntent(entity: AlarmItemEntity): PendingIntent {
         val alarmIntent = Intent(context, AlarmReceiver::class.java).also {
-            it.putExtra("alarm_item", item)
+            it.putExtra("alarm_item", entity.id)
         }
         return PendingIntent.getBroadcast(
-            context, item.id, alarmIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            context, entity.id, alarmIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
     }
 

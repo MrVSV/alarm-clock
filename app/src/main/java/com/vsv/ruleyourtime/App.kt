@@ -7,6 +7,8 @@ import androidx.core.app.NotificationManagerCompat
 import com.vsv.ruleyourtime.alarmclock.AlarmNotification
 import com.vsv.ruleyourtime.di.alarmModule
 import com.vsv.ruleyourtime.di.dataBaseModule
+import com.vsv.ruleyourtime.di.repositoryModule
+import com.vsv.ruleyourtime.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -19,7 +21,7 @@ class App : Application() {
         startKoin {
             androidLogger(level = Level.DEBUG)
             androidContext(androidContext = this@App)
-            modules(alarmModule, dataBaseModule)
+            modules(alarmModule, dataBaseModule, repositoryModule, viewModelModule)
         }
         createNotificationChanel()
     }

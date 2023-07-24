@@ -1,7 +1,6 @@
 package com.vsv.ruleyourtime.di
 
 import androidx.room.Room
-import com.vsv.ruleyourtime.localdb.AlarmsDao
 import com.vsv.ruleyourtime.localdb.AlarmsDataBase
 import org.koin.dsl.module
 
@@ -15,7 +14,5 @@ val dataBaseModule = module {
         ).build()
     }
 
-    single<AlarmsDao> {
-        get<AlarmsDataBase>().alarmsDao()
-    }
+    single { get<AlarmsDataBase>().alarmsDao() }
 }

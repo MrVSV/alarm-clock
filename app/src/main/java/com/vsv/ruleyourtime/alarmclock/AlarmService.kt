@@ -9,7 +9,6 @@ import android.media.MediaPlayer
 import android.media.RingtoneManager
 import android.os.IBinder
 import android.util.Log
-import com.vsv.ruleyourtime.utils.parcelable
 import org.koin.android.ext.android.inject
 
 class AlarmService : Service() {
@@ -29,7 +28,10 @@ class AlarmService : Service() {
             .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
             .build()
         mediaPlayer = MediaPlayer().apply {
-            setDataSource(this@AlarmService, RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM))
+            setDataSource(
+                this@AlarmService,
+                RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
+            )
             setAudioAttributes(audioAttributes)
             isLooping = true
             prepare()
@@ -38,10 +40,10 @@ class AlarmService : Service() {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        val item = intent.parcelable<AlarmItem>("alarm_item")
-        if (item != null) {
-            startForeground(1, notification.getNotification(item))
-        }
+        val item = intent.getIntExtra("alarm_item", 0)
+//        if (item != null) {
+        startForeground(1, notification.getNotification(item))
+//        }
         when (intent.action) {
             AlarmServiceCommands.START.toString() -> mediaPlayer.start()
             AlarmServiceCommands.STOP.toString() -> {

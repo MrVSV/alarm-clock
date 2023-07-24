@@ -15,6 +15,12 @@ interface AlarmsDao {
     @Delete
     suspend fun deleteAlarm(alarmItemEntity: AlarmItemEntity)
 
-    @Query("SELECT * FROM alarms")
+    @Query("SELECT * FROM alarms ORDER BY id ASC")
     fun getAlarmsList(): Flow<List<AlarmItemEntity>>
+
+    @Query("SELECT * FROM alarms ORDER BY timestamp DESC LIMIT 1")
+    suspend fun getLastUpdatedAlarm(): AlarmItemEntity
+
+    @Query("SELECT * FROM alarms WHERE isEnabled=1")
+    fun getAlarmsForReschedule(): List<AlarmItemEntity>
 }

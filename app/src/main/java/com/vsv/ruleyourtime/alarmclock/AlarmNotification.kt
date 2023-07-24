@@ -20,7 +20,7 @@ class AlarmNotification(
         return SimpleDateFormat(pattern, Locale.getDefault()).format(millis)
     }
 
-    override fun getNotification(item: AlarmItem): Notification {
+    override fun getNotification(itemId: Int): Notification {
         val activityIntent = Intent(context, AlarmActivity::class.java)
         val pendingIntent =
             PendingIntent.getActivity(
@@ -44,8 +44,8 @@ class AlarmNotification(
         return NotificationCompat.Builder(context, AlARM_CHANNEL_ID)
             .setDefaults(NotificationCompat.DEFAULT_VIBRATE)
             .setSmallIcon(R.drawable.ic_launcher_background)
-            .setContentTitle("Alarm Clock #${item.hashCode()}")
-            .setContentText("Time ${convertAlarmTime(item.alarmTimeMillis)}")
+            .setContentTitle("Alarm Clock #$itemId")
+//            .setContentText("Time ${convertAlarmTime(item.alarmTimeMillis)}")
             .setFullScreenIntent(pendingIntent, true)
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setCategory(NotificationCompat.CATEGORY_ALARM)

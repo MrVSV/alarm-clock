@@ -1,8 +1,6 @@
 package com.vsv.ruleyourtime.ui
 
-import android.content.ContentValues
 import android.text.format.DateFormat
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,15 +16,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.vsv.ruleyourtime.AlarmsScreenViewModel
-import com.vsv.ruleyourtime.alarmclock.AlarmScheduler
+import com.vsv.ruleyourtime.alarmclock.AlarmItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AlarmsScreen(
     navController: NavController,
+    viewModel: AlarmsScreenViewModel,
     modifier: Modifier = Modifier,
 ) {
     var showTimePicker by remember {
@@ -34,8 +32,8 @@ fun AlarmsScreen(
     }
     val context = LocalContext.current
     val timePickerState = rememberTimePickerState(is24Hour = DateFormat.is24HourFormat(context))
-    val scheduler =  AlarmScheduler(context)
-    val viewModel = viewModel<AlarmsScreenViewModel>()
+//    val scheduler =  AlarmScheduler(context)
+//    val viewModel = viewModel<AlarmsScreenViewModel>()
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -49,7 +47,7 @@ fun AlarmsScreen(
             Text(text = "Open TimePicker")
         }
         Button(
-            onClick = { scheduler.disable() },
+            onClick = { /*scheduler.disable()*/ },
             modifier = Modifier
         ) {
             Text(text = "next alarm")
@@ -58,12 +56,20 @@ fun AlarmsScreen(
     if (showTimePicker) {
         TimePickerDialog(
             onDismiss = { showTimePicker = false },
-            onConfirmClick = { Log.d(ContentValues.TAG, "h: ${timePickerState.hour}, m: ${timePickerState.minute}, 24: ${timePickerState.is24hour}")
-                viewModel.getTimeMillis(timePickerState.hour, timePickerState.minute)
-                scheduler.schedule(viewModel.item.value)
-                Log.d(ContentValues.TAG, "RuleYourTimeApp: ${viewModel.item.value.hashCode()}")
-                Log.d(ContentValues.TAG, "RuleYourTimeApp: ${viewModel.item.value}")
-                showTimePicker = false },
+//            onConfirmClick = { Log.d(ContentValues.TAG, "h: ${timePickerState.hour}, m: ${timePickerState.minute}, 24: ${timePickerState.is24hour}")
+//                viewModel.getTimeMillis(timePickerState.hour, timePickerState.minute)
+//                scheduler.schedule(viewModel.item.value)
+//                Log.d(ContentValues.TAG, "RuleYourTimeApp: ${viewModel.item.value.hashCode()}")
+//                Log.d(ContentValues.TAG, "RuleYourTimeApp: ${viewModel.item.value}")
+//                showTimePicker = false },
+            onConfirmClick = {
+                             viewModel.addAlarm(AlarmItem(
+//                                 id = 2,
+                                 isEnabled = true,
+                                 hours = timePickerState.hour,
+                                 minutes = timePickerState.minute
+                             ))
+            },
             onDismissClick = { showTimePicker = false },
             timePickerState = timePickerState
         )
