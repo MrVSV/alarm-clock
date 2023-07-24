@@ -44,7 +44,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.0"
+        kotlinCompilerExtensionVersion = "1.4.8"
     }
     packaging {
         resources {
@@ -85,6 +85,11 @@ dependencies {
     implementation("io.insert-koin:koin-android:3.4.2")
     implementation("io.insert-koin:koin-androidx-compose:3.4.5")
     testImplementation("io.insert-koin:koin-test-junit4:3.4.1")
+
+    implementation("androidx.room:room-ktx:2.5.2")
+//    implementation("androidx.room:room-runtime:2.5.2")
+    kapt("androidx.room:room-compiler:2.5.2")
+
 
 
 }
