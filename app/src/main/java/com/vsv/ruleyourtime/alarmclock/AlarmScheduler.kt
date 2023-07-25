@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.util.Log
 import com.vsv.ruleyourtime.MainActivity
 import com.vsv.ruleyourtime.localdb.AlarmItemEntity
@@ -18,18 +19,21 @@ class AlarmScheduler(
     private val alarmManager = context.getSystemService(AlarmManager::class.java)
 
     override fun schedule(entity: AlarmItemEntity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            Log.d(TAG, "schedule: ${alarmManager.canScheduleExactAlarms()}")
+        }
         alarmManager.setAlarmClock(
             setAlarmInfo(entity),
             setAlarmPendingIntent(entity)
         )
     }
 
-    override fun disable(/*item: AlarmItem*/) {
+    override fun disable(entity: AlarmItemEntity) {
         Log.d(TAG, "disable: ${alarmManager.nextAlarmClock?.triggerTime}")
     }
 
     override fun cancel(entity: AlarmItemEntity) {
-
+        alarmManager.cancel(setAlarmPendingIntent(entity))
     }
 
     private fun setAlarmInfo(entity: AlarmItemEntity): AlarmClockInfo {

@@ -13,5 +13,5 @@ val alarmModule = module {
 
     single<Scheduler> { AlarmScheduler(context = get(), calendar = get()) }
 
-    single { MyCalendar() }
+    single { MyCalendar(context = get()) }
 }

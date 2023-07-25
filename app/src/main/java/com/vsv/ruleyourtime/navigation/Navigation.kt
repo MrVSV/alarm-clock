@@ -1,6 +1,7 @@
 package com.vsv.ruleyourtime.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -23,9 +24,12 @@ fun Navigation(
             route = Destinations.AlarmsScreen.name
         ) {
             val viewModel = koinViewModel<AlarmsScreenViewModel>()
+            val state = viewModel.state.collectAsState()
+            val onEvent = viewModel::onEvent
             AlarmsScreen(
                 navController = navController,
-                viewModel = viewModel
+                state = state.value,
+                onEvent = onEvent
             )
         }
     }

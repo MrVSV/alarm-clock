@@ -10,28 +10,40 @@ import androidx.compose.material3.TimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.vsv.ruleyourtime.AlarmEvent
+import com.vsv.ruleyourtime.AlarmsScreenState
+import com.vsv.ruleyourtime.ui.theme.RuleYourTimeTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TimePickerDialog(
-    onDismiss: () -> Unit,
-    onConfirmClick: () -> Unit,
-    onDismissClick: () -> Unit,
-    timePickerState: TimePickerState
+    state: AlarmsScreenState,
+    onEvent: (AlarmEvent) -> Unit,
+    timePickerState: TimePickerState,
+    modifier: Modifier = Modifier,
 ) {
     DatePickerDialog(
-        onDismissRequest = onDismiss,
+        modifier = Modifier,
+        onDismissRequest = { onEvent(AlarmEvent.CloseTimePicker) },
         confirmButton = {
             TextButton(
-                onClick = onConfirmClick,
+                onClick = {
+                    onEvent(
+                        AlarmEvent.SetAlarmTime(
+                            timePickerState.hour,
+                            timePickerState.minute
+                        )
+                    )
+                },
             ) {
                 Text(text = "Confirm")
             }
         },
         dismissButton = {
             TextButton(
-                onClick = onDismissClick
+                onClick = { onEvent(AlarmEvent.CloseTimePicker) }
             ) {
                 Text(text = "Cancel")
             }
@@ -39,11 +51,28 @@ fun TimePickerDialog(
     ) {
         Text(
             text = "Select time",
-            modifier = Modifier.padding(8.dp))
+            modifier = Modifier.padding(8.dp)
+        )
         TimePicker(
             state = timePickerState,
             modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
         )
     }
+}
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun TimePickerDialogPreview() {
+    RuleYourTimeTheme() {
+        TimePickerDialog(
+            state = AlarmsScreenState(),
+            onEvent = {},
+            timePickerState = TimePickerState(
+                12,
+                0,
+                true
+            )
+        )
+    }
 }

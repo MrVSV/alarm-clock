@@ -6,7 +6,7 @@ interface Scheduler {
 
     fun schedule(entity: AlarmItemEntity)
 
-    fun disable(/*item: AlarmItem*/)
+    fun disable(entity: AlarmItemEntity)
 
     fun cancel(entity: AlarmItemEntity)
 }

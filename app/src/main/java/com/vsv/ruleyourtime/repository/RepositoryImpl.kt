@@ -26,6 +26,11 @@ class RepositoryImpl(
         }
     }
 
+    override suspend fun deleteAlarm(alarmItem: AlarmItem) {
+        alarmsDao.deleteAlarm(alarmItem.toEntity())
+        alarmScheduler.cancel(alarmItem.toEntity())
+    }
+
     override suspend fun addAlarm(alarmItem: AlarmItem) {
         alarmsDao.addAlarm(alarmItem.toEntity())
         scheduleAlarm()
