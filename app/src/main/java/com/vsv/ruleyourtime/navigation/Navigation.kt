@@ -7,8 +7,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.vsv.ruleyourtime.AlarmsScreenViewModel
-import com.vsv.ruleyourtime.ui.AlarmsScreen
+import com.vsv.ruleyourtime.presentation.alarmsscreen.AlarmsScreenViewModel
+import com.vsv.ruleyourtime.presentation.alarmsscreen.AlarmsScreen
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

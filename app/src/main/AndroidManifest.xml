@@ -3,12 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-    <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
+    <uses-permission
+        android:name="android.permission.SCHEDULE_EXACT_ALARM"
+        android:maxSdkVersion="32"/>
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
 
     <application
@@ -23,13 +25,13 @@
         android:theme="@style/Theme.RuleYourTime"
         tools:targetApi="31">
         <activity
-            android:name=".AlarmActivity"
+            android:name=".presentation.AlarmActivity"
             android:exported="false"
             android:label="@string/title_activity_alarm"
             android:showOnLockScreen="true"
             android:theme="@style/Theme.RuleYourTime" />
         <activity
-            android:name=".MainActivity"
+            android:name=".presentation.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.RuleYourTime">
             <intent-filter>
@@ -38,14 +40,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name=".alarmclock.AlarmReceiver" />
-        <service android:name=".alarmclock.AlarmService" />
+
+        <receiver android:name=".data.alarmclock.AlarmReceiver" />
+        <service android:name=".data.alarmclock.AlarmService" />
         <receiver
-            android:name=".alarmclock.BootCompletedReceiver"
-            android:exported="false"
-            android:directBootAware="true">
+            android:name=".data.alarmclock.BootCompletedReceiver"
+            android:directBootAware="true"
+            android:exported="false">
             <intent-filter>
-                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
     </application>
