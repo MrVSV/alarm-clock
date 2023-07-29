@@ -1,6 +1,6 @@
-package com.vsv.ruleyourtime.data.alarmclock
+package com.vsv.ruleyourtime.data.alarm_clock
 
-import com.vsv.ruleyourtime.data.localdb.AlarmItemEntity
+import com.vsv.ruleyourtime.data.local_db.AlarmItemEntity
 
 interface Scheduler {
 

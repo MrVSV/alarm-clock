@@ -1,8 +1,8 @@
 package com.vsv.ruleyourtime.data.repository
 
-import com.vsv.ruleyourtime.data.alarmclock.AlarmItem
-import com.vsv.ruleyourtime.data.alarmclock.Scheduler
-import com.vsv.ruleyourtime.data.localdb.AlarmsDao
+import com.vsv.ruleyourtime.data.alarm_clock.AlarmItem
+import com.vsv.ruleyourtime.data.alarm_clock.Scheduler
+import com.vsv.ruleyourtime.data.local_db.AlarmsDao
 import com.vsv.ruleyourtime.utils.toListModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

@@ -1,4 +1,4 @@
-package com.vsv.ruleyourtime.presentation.alarmsscreen
+package com.vsv.ruleyourtime.presentation.alarms_screen
 
 import android.text.format.DateFormat
 import androidx.compose.foundation.layout.Arrangement
@@ -29,7 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.vsv.ruleyourtime.data.alarmclock.AlarmItem
+import com.vsv.ruleyourtime.data.alarm_clock.AlarmItem
 import com.vsv.ruleyourtime.presentation.ui.theme.RuleYourTimeTheme
 import com.vsv.ruleyourtime.utils.TimePickerDialog
 

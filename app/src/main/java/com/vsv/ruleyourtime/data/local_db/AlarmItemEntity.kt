@@ -1,8 +1,8 @@
-package com.vsv.ruleyourtime.data.localdb
+package com.vsv.ruleyourtime.data.local_db
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.vsv.ruleyourtime.data.alarmclock.AlarmItem
+import com.vsv.ruleyourtime.data.alarm_clock.AlarmItem
 
 @Entity(tableName = "alarms")
 data class AlarmItemEntity(

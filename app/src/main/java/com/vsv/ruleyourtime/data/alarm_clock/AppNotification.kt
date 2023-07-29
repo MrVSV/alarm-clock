@@ -1,4 +1,4 @@
-package com.vsv.ruleyourtime.data.alarmclock
+package com.vsv.ruleyourtime.data.alarm_clock
 
 import android.app.Notification
 

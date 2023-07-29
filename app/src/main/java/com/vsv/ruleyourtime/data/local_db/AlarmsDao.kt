@@ -1,4 +1,4 @@
-package com.vsv.ruleyourtime.data.localdb
+package com.vsv.ruleyourtime.data.local_db
 
 import androidx.room.Dao
 import androidx.room.Delete

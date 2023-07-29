@@ -1,4 +1,4 @@
-package com.vsv.ruleyourtime.data.alarmclock
+package com.vsv.ruleyourtime.data.alarm_clock
 
 import android.app.AlarmManager
 import android.app.AlarmManager.AlarmClockInfo
@@ -9,7 +9,7 @@ import android.content.Intent
 import android.os.Build
 import android.util.Log
 import com.vsv.ruleyourtime.presentation.MainActivity
-import com.vsv.ruleyourtime.data.localdb.AlarmItemEntity
+import com.vsv.ruleyourtime.data.local_db.AlarmItemEntity
 
 class AlarmScheduler(
     private val context: Context,

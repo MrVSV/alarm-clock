@@ -1,4 +1,4 @@
-package com.vsv.ruleyourtime.data.localdb
+package com.vsv.ruleyourtime.data.local_db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

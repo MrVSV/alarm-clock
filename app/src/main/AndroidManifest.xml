@@ -41,10 +41,10 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".data.alarmclock.AlarmReceiver" />
-        <service android:name=".data.alarmclock.AlarmService" />
+        <receiver android:name=".data.alarm_clock.AlarmReceiver" />
+        <service android:name=".data.alarm_clock.AlarmService" />
         <receiver
-            android:name=".data.alarmclock.BootCompletedReceiver"
+            android:name=".data.alarm_clock.BootCompletedReceiver"
             android:directBootAware="true"
             android:exported="false">
             <intent-filter>

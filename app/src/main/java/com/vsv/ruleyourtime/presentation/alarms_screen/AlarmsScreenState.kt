@@ -1,6 +1,6 @@
-package com.vsv.ruleyourtime.presentation.alarmsscreen
+package com.vsv.ruleyourtime.presentation.alarms_screen
 
-import com.vsv.ruleyourtime.data.alarmclock.AlarmItem
+import com.vsv.ruleyourtime.data.alarm_clock.AlarmItem
 
 data class AlarmsScreenState(
     val alarms: List<AlarmItem> = emptyList(),

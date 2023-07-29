@@ -1,8 +1,8 @@
-package com.vsv.ruleyourtime.presentation.alarmsscreen
+package com.vsv.ruleyourtime.presentation.alarms_screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vsv.ruleyourtime.data.alarmclock.AlarmItem
+import com.vsv.ruleyourtime.data.alarm_clock.AlarmItem
 import com.vsv.ruleyourtime.data.repository.Repository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -51,24 +51,15 @@ class AlarmsScreenViewModel(
                     isEnabled = true
                 )
                 viewModelScope.launch {
-                    repository.addAlarm(alarmItem)
+                    repository.addAlarm(alarmItem = alarmItem)
                 }
                 _state.update {
                     it.copy(isAddingAlarm = false)
                 }
             }
-//            AlarmScreenEvent.AddAlarm -> {
-//                val hours = state.value.hours
-//                val minutes = state.value.minutes
-//                val alarmItem = AlarmItem(
-//                    hours = hours,
-//                    minutes = minutes,
-//                    isEnabled = true
-//                )
-//            }
             is AlarmScreenEvent.DeleteAlarm -> {
                 viewModelScope.launch {
-                    repository.deleteAlarm(event.alarmItem)
+                    repository.deleteAlarm(alarmItem = event.alarmItem)
                 }
             }
         }

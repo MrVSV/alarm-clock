@@ -12,8 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.vsv.ruleyourtime.presentation.alarmsscreen.AlarmScreenEvent
-import com.vsv.ruleyourtime.presentation.alarmsscreen.AlarmsScreenState
+import com.vsv.ruleyourtime.presentation.alarms_screen.AlarmScreenEvent
+import com.vsv.ruleyourtime.presentation.alarms_screen.AlarmsScreenState
 import com.vsv.ruleyourtime.presentation.ui.theme.RuleYourTimeTheme
 
 @OptIn(ExperimentalMaterial3Api::class)

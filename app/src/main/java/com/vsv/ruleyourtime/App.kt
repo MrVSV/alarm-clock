@@ -4,7 +4,7 @@ import android.app.Application
 import android.app.NotificationManager
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationManagerCompat
-import com.vsv.ruleyourtime.data.alarmclock.AlarmNotification
+import com.vsv.ruleyourtime.data.alarm_clock.AlarmNotification
 import com.vsv.ruleyourtime.di.alarmModule
 import com.vsv.ruleyourtime.di.dataBaseModule
 import com.vsv.ruleyourtime.di.repositoryModule
