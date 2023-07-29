@@ -1,10 +1,10 @@
 package com.vsv.ruleyourtime.di
 
-import com.vsv.ruleyourtime.alarmclock.AlarmNotification
-import com.vsv.ruleyourtime.alarmclock.AlarmScheduler
-import com.vsv.ruleyourtime.alarmclock.AppNotification
-import com.vsv.ruleyourtime.alarmclock.MyCalendar
-import com.vsv.ruleyourtime.alarmclock.Scheduler
+import com.vsv.ruleyourtime.data.alarm_clock.AlarmNotification
+import com.vsv.ruleyourtime.data.alarm_clock.AlarmScheduler
+import com.vsv.ruleyourtime.data.alarm_clock.AppNotification
+import com.vsv.ruleyourtime.data.alarm_clock.MyCalendar
+import com.vsv.ruleyourtime.data.alarm_clock.Scheduler
 import org.koin.dsl.module
 
 val alarmModule = module {
