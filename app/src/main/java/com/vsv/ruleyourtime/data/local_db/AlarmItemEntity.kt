@@ -2,7 +2,7 @@ package com.vsv.ruleyourtime.data.local_db
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.vsv.ruleyourtime.data.alarm_clock.AlarmItem
+import com.vsv.ruleyourtime.domain.model.AlarmItem
 
 @Entity(tableName = "alarms")
 data class AlarmItemEntity(

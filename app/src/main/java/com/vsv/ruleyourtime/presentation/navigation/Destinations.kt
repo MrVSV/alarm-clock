@@ -1,4 +1,4 @@
-package com.vsv.ruleyourtime.navigation
+package com.vsv.ruleyourtime.presentation.navigation
 
 enum class Destinations {
     AlarmsScreen,

@@ -1,5 +1,7 @@
-package com.vsv.ruleyourtime.utils
+package com.vsv.ruleyourtime.presentation.common
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -36,6 +38,7 @@ fun TimePickerDialog(
                             timePickerState.minute
                         )
                     )
+                    Log.d(TAG, "TimePickerDialog: $state")
                 },
             ) {
                 Text(text = "Confirm")
@@ -49,14 +52,19 @@ fun TimePickerDialog(
             }
         }
     ) {
+
         Text(
             text = "Select time",
             modifier = Modifier.padding(8.dp)
         )
         TimePicker(
             state = timePickerState,
-            modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
+            modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
         )
+//        TimeInput(
+//            state = timePickerState,
+//            modifier = Modifier.align(alignment = Alignment.CenterHorizontally),
+//        )
     }
 }
 

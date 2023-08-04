@@ -8,8 +8,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.vsv.ruleyourtime.data.alarm_clock.AlarmService
-import com.vsv.ruleyourtime.data.alarm_clock.AlarmServiceCommands
+import com.vsv.ruleyourtime.data.alarm_clock.foreground_services.AlarmService
+import com.vsv.ruleyourtime.data.alarm_clock.foreground_services.AlarmServiceCommands
 import com.vsv.ruleyourtime.presentation.ui.theme.RuleYourTimeTheme
 import com.vsv.ruleyourtime.utils.turnScreenOffAndKeyguardOn
 import com.vsv.ruleyourtime.utils.turnScreenOnAndKeyguardOff

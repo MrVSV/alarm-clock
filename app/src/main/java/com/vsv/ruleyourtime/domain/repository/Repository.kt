@@ -1,11 +1,11 @@
-package com.vsv.ruleyourtime.data.repository
+package com.vsv.ruleyourtime.domain.repository
 
-import com.vsv.ruleyourtime.data.alarm_clock.AlarmItem
+import com.vsv.ruleyourtime.domain.model.AlarmItem
 import kotlinx.coroutines.flow.Flow
 
 interface Repository {
 
-    suspend fun addAlarm(alarmItem: AlarmItem)
+    suspend fun addAlarm(alarmItem: AlarmItem): Boolean
 
     fun getAlarmList(): Flow<List<AlarmItem>>
 

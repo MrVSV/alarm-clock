@@ -4,17 +4,16 @@
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission
-        android:name="android.permission.SCHEDULE_EXACT_ALARM"
-        android:maxSdkVersion="32"/>
-    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+        android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+<!--        android:maxSdkVersion="32"/>-->
+<!--    <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>-->
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
-
     <application
-        android:name=".App"
+        android:name=".app.App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -41,14 +40,20 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".data.alarm_clock.AlarmReceiver" />
-        <service android:name=".data.alarm_clock.AlarmService" />
+        <receiver android:name=".data.alarm_clock.receivers.AlarmReceiver" />
+        <service android:name=".data.alarm_clock.foreground_services.AlarmService" />
         <receiver
-            android:name=".data.alarm_clock.BootCompletedReceiver"
-            android:directBootAware="true"
+            android:name=".data.alarm_clock.receivers.BootCompletedReceiver"
             android:exported="false">
             <intent-filter>
-                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".data.alarm_clock.receivers.AlarmPermissionStateChangingReceiver"
+            android:exported="true"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.app.action.SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED" />
             </intent-filter>
         </receiver>
     </application>

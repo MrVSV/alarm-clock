@@ -1,13 +1,19 @@
-package com.vsv.ruleyourtime.data.alarm_clock
+package com.vsv.ruleyourtime.data.alarm_clock.foreground_services
 
 import android.app.Notification
+import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.text.format.DateFormat
+import android.util.Log
+import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
-import com.vsv.ruleyourtime.presentation.AlarmActivity
+import androidx.core.app.NotificationManagerCompat
 import com.vsv.ruleyourtime.R
+import com.vsv.ruleyourtime.domain.notification.AppNotification
+import com.vsv.ruleyourtime.presentation.AlarmActivity
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -18,6 +24,24 @@ class AlarmNotification(
     private fun convertAlarmTime(millis: Long): String {
         val pattern = if (DateFormat.is24HourFormat(context)) "HH:mm" else "HH:mm a"
         return SimpleDateFormat(pattern, Locale.getDefault()).format(millis)
+    }
+
+    override fun isNotificationEnabled(): Boolean {
+        val notificationManager = NotificationManagerCompat.from(context)
+        return notificationManager.areNotificationsEnabled()
+    }
+
+    override fun createNotificationChanel(): NotificationChannelCompat {
+        Log.d(TAG, "createNotificationChanel: alarm")
+        return NotificationChannelCompat.Builder(
+            AlARM_CHANNEL_ID,
+            NotificationManager.IMPORTANCE_MAX
+        )
+            .setName("Active Alarms")
+            .setSound(null, null)
+            .setVibrationEnabled(true)
+            .build()
+
     }
 
     override fun getNotification(itemId: Int): Notification {

@@ -1,27 +1,28 @@
-package com.vsv.ruleyourtime.data.alarm_clock
+package com.vsv.ruleyourtime.data.alarm_clock.scheduler
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.AlarmManager.AlarmClockInfo
 import android.app.PendingIntent
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.util.Log
-import com.vsv.ruleyourtime.presentation.MainActivity
+import com.vsv.ruleyourtime.data.alarm_clock.receivers.AlarmReceiver
 import com.vsv.ruleyourtime.data.local_db.AlarmItemEntity
+import com.vsv.ruleyourtime.domain.scheduler.Scheduler
+import com.vsv.ruleyourtime.presentation.MainActivity
+import com.vsv.ruleyourtime.utils.MyCalendar
 
 class AlarmScheduler(
     private val context: Context,
-    private val calendar: MyCalendar
+    private val calendar: MyCalendar,
 ) : Scheduler {
 
     private val alarmManager = context.getSystemService(AlarmManager::class.java)
 
+    @SuppressLint("ScheduleExactAlarm")
     override fun schedule(entity: AlarmItemEntity) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            Log.d(TAG, "schedule: ${alarmManager.canScheduleExactAlarms()}")
-        }
         alarmManager.setAlarmClock(
             setAlarmInfo(entity),
             setAlarmPendingIntent(entity)
@@ -41,7 +42,10 @@ class AlarmScheduler(
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
         val alarmInfoPendingIntent = PendingIntent.getActivity(
-            context, entity.id, alarmInfoIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            context,
+            entity.id,
+            alarmInfoIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
         Log.d(TAG, "setAlarmInfo: ${entity.hours}:${entity.minutes}")
         return AlarmClockInfo(
@@ -55,8 +59,10 @@ class AlarmScheduler(
             it.putExtra("alarm_item", entity.id)
         }
         return PendingIntent.getBroadcast(
-            context, entity.id, alarmIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            context,
+            entity.id,
+            alarmIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
     }
-
 }

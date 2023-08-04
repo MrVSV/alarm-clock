@@ -1,4 +1,4 @@
-package com.vsv.ruleyourtime.data.alarm_clock
+package com.vsv.ruleyourtime.utils
 
 import android.content.ContentValues.TAG
 import android.content.Context

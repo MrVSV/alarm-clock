@@ -1,4 +1,4 @@
-package com.vsv.ruleyourtime.data.alarm_clock
+package com.vsv.ruleyourtime.data.alarm_clock.foreground_services
 
 import android.app.Service
 import android.content.ContentValues.TAG
@@ -9,11 +9,14 @@ import android.media.MediaPlayer
 import android.media.RingtoneManager
 import android.os.IBinder
 import android.util.Log
+import com.vsv.ruleyourtime.domain.notification.AppNotification
 import org.koin.android.ext.android.inject
+import org.koin.core.qualifier.named
 
 class AlarmService : Service() {
 
-    private val notification: AppNotification by inject()
+    private val notification: AppNotification by inject(qualifier = named("alarmNotification"))
+
     private lateinit var mediaPlayer: MediaPlayer
     override fun onBind(intent: Intent?): IBinder? {
         return null

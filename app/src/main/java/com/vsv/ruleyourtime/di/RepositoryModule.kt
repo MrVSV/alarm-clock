@@ -1,6 +1,6 @@
 package com.vsv.ruleyourtime.di
 
-import com.vsv.ruleyourtime.data.repository.Repository
+import com.vsv.ruleyourtime.domain.repository.Repository
 import com.vsv.ruleyourtime.data.repository.RepositoryImpl
 import org.koin.dsl.module
 

@@ -1,37 +1,91 @@
 package com.vsv.ruleyourtime.presentation.alarms_screen
 
+import android.Manifest
+import android.app.AlarmManager
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
+import android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
 import android.text.format.DateFormat
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.Card
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarVisuals
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.core.app.NotificationManagerCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavController
-import com.vsv.ruleyourtime.data.alarm_clock.AlarmItem
+import com.vsv.ruleyourtime.domain.model.AlarmItem
+import com.vsv.ruleyourtime.presentation.common.AlarmRationaleDialog
+import com.vsv.ruleyourtime.presentation.common.NotificationRationaleDialog
+import com.vsv.ruleyourtime.presentation.common.TimePickerDialog
 import com.vsv.ruleyourtime.presentation.ui.theme.RuleYourTimeTheme
-import com.vsv.ruleyourtime.utils.TimePickerDialog
+import com.vsv.ruleyourtime.utils.findActivity
+import kotlinx.coroutines.launch
+
+fun checkAlarmPermissionState(context: Context): Boolean {
+    val alarmManager = context.getSystemService(AlarmManager::class.java)
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+        alarmManager.canScheduleExactAlarms()
+    else true
+}
+
+fun checkNotificationPermissionState(context: Context): Boolean {
+    val notificationManager = NotificationManagerCompat.from(context)
+    return notificationManager.areNotificationsEnabled()
+}
+
+fun openAlarmPermissionSettings(context: Context){
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        context.startActivity(
+            Intent(
+                ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
+                Uri.fromParts("package", context.packageName, null)
+            )
+        )
+    }
+}
+
+class AlarmPermissionSnackbarVisuals(
+    override val message: String,
+    override val actionLabel: String,
+) : SnackbarVisuals {
+    override val duration: SnackbarDuration
+        get() = SnackbarDuration.Indefinite
+    override val withDismissAction: Boolean
+        get() = true
+
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,14 +95,110 @@ fun AlarmsScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
 ) {
+
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val scope = rememberCoroutineScope()
     val timePickerState = rememberTimePickerState(
         is24Hour = DateFormat.is24HourFormat(context)
     )
+    val snackbarHostState = remember { SnackbarHostState() }
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranded ->
+            if (isGranded) onEvent(AlarmScreenEvent.ShowTimePicker)
+            else {
+                if (context.findActivity()
+                        .shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)
+                ) {
+                    onEvent(AlarmScreenEvent.ShowNotificationRationale)
+                }
+            }
+        }
+    )
+
+    DisposableEffect(key1 = lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                if (!checkAlarmPermissionState(context)) {
+                    scope.launch {
+                        snackbarHostState.showSnackbar(
+                            AlarmPermissionSnackbarVisuals(
+                                message = "Нужно разрешение будильника",
+                                actionLabel = "Настройки"
+                            )
+                        )
+                    }
+                }
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
+    if (state.isAddingAlarm) {
+        TimePickerDialog(
+            state = state,
+            onEvent = onEvent,
+            timePickerState = timePickerState,
+        )
+    }
+
+    if (state.isShouldShowNotificationRationale) {
+        NotificationRationaleDialog(
+            onEvent = onEvent,
+            text = "Нужно разрешение на уведомления"
+        )
+    }
+
+    if (state.isShouldShowAlarmRationale) {
+        AlarmRationaleDialog(
+            permissionRequest = { openAlarmPermissionSettings(context) },
+            onEvent = onEvent,
+            text = "Перейти к настройкам будильника"
+        )
+    }
+
     Scaffold(
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState
+            ) { data ->
+                Snackbar(
+                    dismissAction = {
+                        IconButton(onClick = { snackbarHostState.currentSnackbarData?.dismiss() }) {
+                            Icon(imageVector = Icons.Default.Close, contentDescription = null)
+                        }
+                    },
+                    action = {
+                        TextButton(
+                            onClick = { openAlarmPermissionSettings(context) }
+                        ) {
+                            Text(text = data.visuals.actionLabel ?: "")
+                        }
+                    },
+                    modifier = Modifier.padding(8.dp)
+                ) {
+                    Text(text = data.visuals.message)
+                }
+            }
+
+        },
         floatingActionButton = {
             LargeFloatingActionButton(
-                onClick = { onEvent(AlarmScreenEvent.ShowTimePicker) },
+                onClick = {
+                    if (!checkAlarmPermissionState(context)) {
+                        onEvent(AlarmScreenEvent.ShowAlarmRationale)
+                    } else if (!checkNotificationPermissionState(context)) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                        }
+                    } else {
+                        onEvent(AlarmScreenEvent.ShowTimePicker)
+                    }
+                }
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
@@ -58,13 +208,7 @@ fun AlarmsScreen(
             }
         },
     ) { paddingValues ->
-        if (state.isAddingAlarm) {
-            TimePickerDialog(
-                state = state,
-                onEvent = onEvent,
-                timePickerState = timePickerState
-            )
-        }
+
         LazyColumn(
             contentPadding = paddingValues,
             modifier = Modifier
@@ -73,37 +217,7 @@ fun AlarmsScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(items = state.alarms) { alarm ->
-                Card(
-                    onClick = { },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight()
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(16.dp)
-                    ) {
-                        Text(
-                            text =
-                            String.format("%02d", alarm.hours) + ":" + String.format(
-                                "%02d",
-                                alarm.minutes
-                            ),
-                            fontSize = 36.sp,
-                            modifier = Modifier.weight(1f)
-                        )
-                        IconButton(
-                            onClick = { onEvent(AlarmScreenEvent.DeleteAlarm(alarm)) }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Delete,
-                                contentDescription = "delete alarm",
-                                modifier = Modifier
-                                    .size(36.dp)
-                            )
-                        }
-                    }
-                }
+                AlarmsScreenItem(alarm = alarm, state = state, onEvent = onEvent)
             }
         }
     }

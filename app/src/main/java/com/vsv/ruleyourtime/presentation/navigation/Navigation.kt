@@ -1,4 +1,4 @@
-package com.vsv.ruleyourtime.navigation
+package com.vsv.ruleyourtime.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -7,8 +7,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.vsv.ruleyourtime.presentation.alarms_screen.AlarmsScreenViewModel
 import com.vsv.ruleyourtime.presentation.alarms_screen.AlarmsScreen
+import com.vsv.ruleyourtime.presentation.alarms_screen.AlarmsScreenViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

@@ -1,4 +1,4 @@
-package com.vsv.ruleyourtime.data.alarm_clock
+package com.vsv.ruleyourtime.domain.model
 
 import android.os.Parcelable
 import com.vsv.ruleyourtime.data.local_db.AlarmItemEntity

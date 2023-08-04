@@ -3,12 +3,22 @@ package com.vsv.ruleyourtime.utils
 import android.app.Activity
 import android.app.KeyguardManager
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.WindowManager
+
+fun Context.findActivity(): Activity {
+    var context = this
+    while (context is ContextWrapper) {
+        if (context is Activity) return context
+        context = context.baseContext
+    }
+    throw IllegalStateException("Permissions should be called in the context of an Activity")
+}
 
 fun Activity.turnScreenOnAndKeyguardOff() {
     if (SDK_INT >= Build.VERSION_CODES.O_MR1) {
