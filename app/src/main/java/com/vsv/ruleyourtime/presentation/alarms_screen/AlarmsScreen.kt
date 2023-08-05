@@ -2,11 +2,9 @@ package com.vsv.ruleyourtime.presentation.alarms_screen
 
 import android.Manifest
 import android.app.AlarmManager
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.os.Build
 import android.text.format.DateFormat
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -21,13 +19,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
@@ -49,7 +45,6 @@ import com.vsv.ruleyourtime.utils.findActivity
 import com.vsv.ruleyourtime.utils.openAlarmPermissionSettings
 import com.vsv.ruleyourtime.utils.openNotificationPermissionSettings
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AlarmsScreen(
     state: AlarmsScreenState,
@@ -62,9 +57,6 @@ fun AlarmsScreen(
         context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
     val notificationManager = NotificationManagerCompat.from(context)
     val lifecycleOwner = LocalLifecycleOwner.current
-    val timePickerState = rememberTimePickerState(
-        is24Hour = DateFormat.is24HourFormat(context)
-    )
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranded ->
@@ -84,6 +76,7 @@ fun AlarmsScreen(
             if (event == Lifecycle.Event.ON_RESUME) {
                 alarmManager?.checkAlarmPermissionState(onEvent)
                 notificationManager.checkNotificationPermissionState(onEvent)
+                onEvent(AlarmScreenEvent.CheckTimeFormat(DateFormat.is24HourFormat(context)))
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
@@ -96,7 +89,6 @@ fun AlarmsScreen(
         TimePickerDialog(
             state = state,
             onEvent = onEvent,
-            timePickerState = timePickerState,
         )
     }
 
@@ -121,14 +113,11 @@ fun AlarmsScreen(
                 onClick = {
                     if (!state.isAlarmsEnable) {
                         onEvent(AlarmScreenEvent.ShowAlarmRationale)
-                        Log.d(TAG, "AlarmsScreen: 1")
                     } else if (!state.isNotificationEnable) {
-                        Log.d(TAG, "AlarmsScreen: 2")
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                             permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                         }
                     } else {
-                        Log.d(TAG, "AlarmsScreen: 3")
                         onEvent(AlarmScreenEvent.ShowTimePicker)
                     }
                 }
@@ -196,7 +185,11 @@ fun AlarmsScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(items = state.alarms) { alarm ->
-                    AlarmsScreenItem(alarm = alarm, state = state, onEvent = onEvent)
+                    AlarmsScreenItem(
+                        alarm = alarm,
+                        state = state,
+                        onEvent = onEvent,
+                    )
                 }
             }
         }

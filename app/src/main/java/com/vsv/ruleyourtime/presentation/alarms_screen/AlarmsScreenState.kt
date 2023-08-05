@@ -6,6 +6,7 @@ data class AlarmsScreenState(
     val alarms: List<AlarmItem> = emptyList(),
     val hours: Int = 12,
     val minutes: Int = 0,
+    val is24HourFormat: Boolean = true,
     val isAddingAlarm: Boolean = false,
     val isLoading: Boolean = false,
     val isError: Boolean = false,

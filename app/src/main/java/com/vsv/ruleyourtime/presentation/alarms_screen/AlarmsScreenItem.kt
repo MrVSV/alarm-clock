@@ -15,11 +15,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vsv.ruleyourtime.domain.model.AlarmItem
-import com.vsv.ruleyourtime.presentation.ui.theme.RuleYourTimeTheme
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -27,8 +27,14 @@ fun AlarmsScreenItem(
     alarm: AlarmItem,
     state: AlarmsScreenState,
     onEvent: (AlarmScreenEvent) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
+    val pattern = if (state.is24HourFormat) "HH:mm" else "hh:mm a"
+    val timeFormat = DateTimeFormatter.ofPattern(pattern)
+    val time = LocalTime.parse(
+        String.format("%02d", alarm.hours) + ":" + String.format("%02d", alarm.minutes),
+        DateTimeFormatter.ofPattern("HH:mm")
+    )
     Card(
         onClick = { },
         modifier = Modifier
@@ -40,11 +46,7 @@ fun AlarmsScreenItem(
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text =
-                String.format("%02d", alarm.hours) + ":" + String.format(
-                    "%02d",
-                    alarm.minutes
-                ),
+                text = time.format(timeFormat),
                 fontSize = 36.sp,
                 modifier = Modifier.weight(1f)
             )
@@ -59,17 +61,5 @@ fun AlarmsScreenItem(
                 )
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun AlarmsScreenItemPreview() {
-    RuleYourTimeTheme {
-        AlarmsScreenItem(
-            alarm = AlarmItem(0, true, 0, 0),
-            state = AlarmsScreenState(),
-            onEvent = {}
-        )
     }
 }

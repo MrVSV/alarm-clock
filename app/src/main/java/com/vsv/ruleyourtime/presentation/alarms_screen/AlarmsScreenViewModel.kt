@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalTime
 
 class AlarmsScreenViewModel(
     private val repository: Repository,
@@ -37,6 +38,8 @@ class AlarmsScreenViewModel(
         combine(_state, _alarms, _userPreferences) { state, alarms, prefs ->
             state.copy(
                 alarms = alarms,
+                hours = LocalTime.now().hour + 1,
+                minutes = LocalTime.now().minute,
                 isAlarmRationaleShown = prefs.isAlarmRationaleShown,
                 isNotificationRationaleShown = prefs.isNotificationRationaleShown
             )
@@ -49,8 +52,6 @@ class AlarmsScreenViewModel(
     fun onEvent(event: AlarmScreenEvent) {
         when (event) {
             AlarmScreenEvent.ShowTimePicker -> {
-                val currentTime = System.currentTimeMillis()
-//                myCalendar.
                 _state.update {
                     it.copy(isAddingAlarm = true)
                 }
@@ -130,6 +131,11 @@ class AlarmsScreenViewModel(
             is AlarmScreenEvent.CheckNotificationPermissionState -> {
                 _state.update {
                     it.copy(isNotificationEnable = event.isGranted)
+                }
+            }
+            is AlarmScreenEvent.CheckTimeFormat -> {
+                _state.update {
+                    it.copy(is24HourFormat = event.is24HourFormat)
                 }
             }
         }
