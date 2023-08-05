@@ -1,23 +1,17 @@
 plugins {
-    id(Plugins.application)
+    id(Plugins.library)
     id(Plugins.android)
 }
 
 android {
-    namespace = "com.vsv.ruleyourtime"
+    namespace = "com.vsv.feature_alarm_clock"
     compileSdk = Config.compileSdk
 
     defaultConfig {
-        applicationId = "com.vsv.ruleyourtime"
         minSdk = Config.minSdk
-        targetSdk = Config.targetSdk
-        versionCode = Config.versionCode
-        versionName = Config.versionName
 
         testInstrumentationRunner = Config.testInstrumentationRunner
-        vectorDrawables {
-            useSupportLibrary = true
-        }
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -30,8 +24,8 @@ android {
         }
     }
     compileOptions {
-        targetCompatibility = Config.javaVersion
         sourceCompatibility = Config.javaVersion
+        targetCompatibility = Config.javaVersion
     }
     kotlinOptions {
         jvmTarget = Config.jvmTarget
@@ -51,9 +45,8 @@ android {
 
 dependencies {
 
-    implementation(project(":local_data_base"))
     implementation(project(":core"))
-    implementation(project(":feature_alarm_clock"))
+    implementation(project(":local_data_base"))
 
     implementation(Dependencies.Core.core)
     implementation(platform(Dependencies.Core.kotlinBom))
@@ -78,7 +71,6 @@ dependencies {
     implementation(Dependencies.Koin.koinAndroidxCompose)
     testImplementation(Dependencies.Koin.koinTestJunit4)
 
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    implementation(Dependencies.DataStore.preferencesDataStore)
+
 }

@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import com.vsv.ruleyourtime.presentation.navigation.Navigation
 import com.vsv.ruleyourtime.presentation.ui.theme.RuleYourTimeTheme
 
@@ -17,11 +16,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
-    override fun onResume() {
-        super.onResume()
-
-    }
 }
 
 @Composable
@@ -30,10 +24,3 @@ fun RuleYourTimeApp(
     Navigation()
 }
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    RuleYourTimeTheme {
-        RuleYourTimeApp()
-    }
-}

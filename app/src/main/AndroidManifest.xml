@@ -5,8 +5,8 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission
         android:name="android.permission.SCHEDULE_EXACT_ALARM"
-        android:maxSdkVersion="32"/>
-    <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -24,7 +24,7 @@
         android:theme="@style/Theme.RuleYourTime"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.AlarmActivity"
+            android:name="com.vsv.feature_alarm_clock.presentation.AlarmActivity"
             android:exported="false"
             android:label="@string/title_activity_alarm"
             android:showOnLockScreen="true"
@@ -35,24 +35,29 @@
             android:theme="@style/Theme.RuleYourTime">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.vsv.app.mainactivity"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
 
-        <receiver android:name=".data.alarm_clock.receivers.AlarmReceiver" />
-        <service android:name=".data.alarm_clock.foreground_services.AlarmService" />
+        <receiver android:name="com.vsv.feature_alarm_clock.data.alarm_clock.receivers.AlarmReceiver" />
+        <service android:name="com.vsv.feature_alarm_clock.data.alarm_clock.foreground_services.AlarmService" />
+
         <receiver
-            android:name=".data.alarm_clock.receivers.BootCompletedReceiver"
-            android:exported="false"
-            android:directBootAware="true">
+            android:name="com.vsv.feature_alarm_clock.data.alarm_clock.receivers.BootCompletedReceiver"
+            android:directBootAware="true"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".data.alarm_clock.receivers.AlarmPermissionStateChangingReceiver"
-            android:exported="true"
-            android:enabled="true">
+        <receiver
+            android:name="com.vsv.feature_alarm_clock.data.alarm_clock.receivers.AlarmPermissionStateChangingReceiver"
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.app.action.SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED" />
             </intent-filter>
