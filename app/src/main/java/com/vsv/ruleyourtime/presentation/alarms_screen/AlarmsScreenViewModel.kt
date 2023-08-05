@@ -138,6 +138,11 @@ class AlarmsScreenViewModel(
                     it.copy(is24HourFormat = event.is24HourFormat)
                 }
             }
+            AlarmScreenEvent.ChangeTimePickerInputMode -> {
+                _state.update {
+                    it.copy(isDialTimePickerInputMode = !it.isDialTimePickerInputMode)
+                }
+            }
         }
     }
 }

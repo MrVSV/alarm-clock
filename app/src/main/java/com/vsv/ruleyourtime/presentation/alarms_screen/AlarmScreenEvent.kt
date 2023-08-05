@@ -15,4 +15,5 @@ sealed interface AlarmScreenEvent{
     data class CheckAlarmPermissionState(val isGranted: Boolean): AlarmScreenEvent
     data class CheckNotificationPermissionState(val isGranted: Boolean): AlarmScreenEvent
     data class CheckTimeFormat(val is24HourFormat: Boolean): AlarmScreenEvent
+    object ChangeTimePickerInputMode: AlarmScreenEvent
 }

@@ -8,6 +8,7 @@ data class AlarmsScreenState(
     val minutes: Int = 0,
     val is24HourFormat: Boolean = true,
     val isAddingAlarm: Boolean = false,
+    val isDialTimePickerInputMode: Boolean = true,
     val isLoading: Boolean = false,
     val isError: Boolean = false,
     /*alarm permission state*/
