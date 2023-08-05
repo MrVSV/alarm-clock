@@ -14,11 +14,11 @@ fun NotificationRationaleDialog(
     modifier: Modifier = Modifier,
 ) {
     AlertDialog(
-        onDismissRequest = { onEvent(AlarmScreenEvent.CloseRationaleDialog) },
+        onDismissRequest = { onEvent(AlarmScreenEvent.CloseNotificationRationale) },
         confirmButton = {
             TextButton(
                 onClick = {
-                    onEvent(AlarmScreenEvent.CloseRationaleDialog)
+                    onEvent(AlarmScreenEvent.CloseNotificationRationale)
                 }
             ) {
                 Text(text = "OK")

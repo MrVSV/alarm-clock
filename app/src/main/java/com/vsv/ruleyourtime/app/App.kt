@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.core.app.NotificationManagerCompat
 import com.vsv.ruleyourtime.di.alarmModule
 import com.vsv.ruleyourtime.di.dataBaseModule
+import com.vsv.ruleyourtime.di.dataStoreModule
 import com.vsv.ruleyourtime.di.repositoryModule
 import com.vsv.ruleyourtime.di.viewModelModule
 import com.vsv.ruleyourtime.domain.notification.AppNotification
@@ -24,7 +25,7 @@ class App : Application() {
         startKoin {
             androidLogger(level = Level.DEBUG)
             androidContext(androidContext = this@App)
-            modules(alarmModule, dataBaseModule, repositoryModule, viewModelModule)
+            modules(alarmModule, dataBaseModule, repositoryModule, viewModelModule, dataStoreModule)
         }
 
         val notificationManager = NotificationManagerCompat.from(applicationContext)

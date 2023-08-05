@@ -10,5 +10,8 @@ sealed interface AlarmScreenEvent{
     object OnSnackbarClose: AlarmScreenEvent
     object ShowAlarmRationale: AlarmScreenEvent
     object ShowNotificationRationale: AlarmScreenEvent
-    object CloseRationaleDialog: AlarmScreenEvent
+    object CloseAlarmRationale: AlarmScreenEvent
+    object CloseNotificationRationale: AlarmScreenEvent
+    data class CheckAlarmPermissionState(val isGranted: Boolean): AlarmScreenEvent
+    data class CheckNotificationPermissionState(val isGranted: Boolean): AlarmScreenEvent
 }

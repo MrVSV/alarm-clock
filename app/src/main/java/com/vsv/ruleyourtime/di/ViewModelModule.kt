@@ -6,6 +6,10 @@ import org.koin.dsl.module
 
 val viewModelModule = module {
 
-    viewModel { AlarmsScreenViewModel(repository = get())}
-
+    viewModel {
+        AlarmsScreenViewModel(
+            repository = get(),
+            userPreferencesRepository = get()
+        )
+    }
 }

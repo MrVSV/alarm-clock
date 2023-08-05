@@ -19,22 +19,23 @@ class AlarmScheduler(
     private val calendar: MyCalendar,
 ) : Scheduler {
 
-    private val alarmManager = context.getSystemService(AlarmManager::class.java)
+    private val alarmManager =
+        context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
 
     @SuppressLint("ScheduleExactAlarm")
     override fun schedule(entity: AlarmItemEntity) {
-        alarmManager.setAlarmClock(
+        alarmManager?.setAlarmClock(
             setAlarmInfo(entity),
             setAlarmPendingIntent(entity)
         )
     }
 
     override fun disable(entity: AlarmItemEntity) {
-        Log.d(TAG, "disable: ${alarmManager.nextAlarmClock?.triggerTime}")
+        Log.d(TAG, "disable: ${alarmManager?.nextAlarmClock?.triggerTime}")
     }
 
     override fun cancel(entity: AlarmItemEntity) {
-        alarmManager.cancel(setAlarmPendingIntent(entity))
+        alarmManager?.cancel(setAlarmPendingIntent(entity))
     }
 
     private fun setAlarmInfo(entity: AlarmItemEntity): AlarmClockInfo {

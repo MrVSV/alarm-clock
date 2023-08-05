@@ -15,12 +15,12 @@ fun AlarmRationaleDialog(
     modifier: Modifier = Modifier,
 ) {
     AlertDialog(
-        onDismissRequest = { onEvent(AlarmScreenEvent.CloseRationaleDialog) },
+        onDismissRequest = { onEvent(AlarmScreenEvent.CloseAlarmRationale) },
         confirmButton = {
             TextButton(
                 onClick = {
                     permissionRequest()
-                    onEvent(AlarmScreenEvent.CloseRationaleDialog)
+                    onEvent(AlarmScreenEvent.CloseAlarmRationale)
                 }
             ) {
                 Text(text = "OK")
@@ -29,7 +29,7 @@ fun AlarmRationaleDialog(
         dismissButton = {
             TextButton(
                 onClick = {
-                    onEvent(AlarmScreenEvent.CloseRationaleDialog)
+                    onEvent(AlarmScreenEvent.CloseAlarmRationale)
                 }
             )
             { Text(text = "Cancel") }

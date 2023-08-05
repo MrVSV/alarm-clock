@@ -5,7 +5,9 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vsv.ruleyourtime.domain.model.AlarmItem
+import com.vsv.ruleyourtime.domain.preferences.UserPreferences
 import com.vsv.ruleyourtime.domain.repository.Repository
+import com.vsv.ruleyourtime.domain.repository.UserPreferencesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -15,6 +17,7 @@ import kotlinx.coroutines.launch
 
 class AlarmsScreenViewModel(
     private val repository: Repository,
+    private val userPreferencesRepository: UserPreferencesRepository,
 ) : ViewModel() {
 
     private val _alarms = repository.getAlarmList().stateIn(
@@ -23,14 +26,25 @@ class AlarmsScreenViewModel(
         initialValue = emptyList()
     )
 
-    private val _state = MutableStateFlow(AlarmsScreenState())
-    val state = combine(_state, _alarms) { state, alarms ->
-        state.copy(alarms = alarms)
-    }.stateIn(
+    private val _userPreferences = userPreferencesRepository.getFromPreferences().stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000L),
-        initialValue = AlarmsScreenState()
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = UserPreferences()
     )
+
+    private val _state = MutableStateFlow(AlarmsScreenState())
+    val state =
+        combine(_state, _alarms, _userPreferences) { state, alarms, prefs ->
+            state.copy(
+                alarms = alarms,
+                isAlarmRationaleShown = prefs.isAlarmRationaleShown,
+                isNotificationRationaleShown = prefs.isNotificationRationaleShown
+            )
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000L),
+            initialValue = AlarmsScreenState()
+        )
 
     fun onEvent(event: AlarmScreenEvent) {
         when (event) {
@@ -75,22 +89,47 @@ class AlarmsScreenViewModel(
                     it.copy(isError = false)
                 }
             }
-            AlarmScreenEvent.CloseRationaleDialog -> {
-                _state.update {
-                    it.copy(
-                        isShouldShowAlarmRationale = false,
-                        isShouldShowNotificationRationale = false
+            AlarmScreenEvent.CloseAlarmRationale -> {
+                viewModelScope.launch {
+                    userPreferencesRepository.saveToPreferences(
+                        UserPreferencesRepository.IS_ALARM_RATIONALE_SHOWN,
+                        true
                     )
+                }
+                _state.update {
+                    it.copy(isShouldShowAlarmRationale = false)
                 }
             }
             is AlarmScreenEvent.ShowAlarmRationale -> {
                 _state.update {
                     it.copy(isShouldShowAlarmRationale = true)
                 }
+
             }
             AlarmScreenEvent.ShowNotificationRationale -> {
                 _state.update {
                     it.copy(isShouldShowNotificationRationale = true)
+                }
+            }
+            AlarmScreenEvent.CloseNotificationRationale -> {
+                viewModelScope.launch {
+                    userPreferencesRepository.saveToPreferences(
+                        UserPreferencesRepository.IS_NOTIFICATION_RATIONALE_SHOWN,
+                        true
+                    )
+                }
+                _state.update {
+                    it.copy(isShouldShowNotificationRationale = false)
+                }
+            }
+            is AlarmScreenEvent.CheckAlarmPermissionState -> {
+                _state.update {
+                    it.copy(isAlarmsEnable = event.isGranted)
+                }
+            }
+            is AlarmScreenEvent.CheckNotificationPermissionState -> {
+                _state.update {
+                    it.copy(isNotificationEnable = event.isGranted)
                 }
             }
         }
