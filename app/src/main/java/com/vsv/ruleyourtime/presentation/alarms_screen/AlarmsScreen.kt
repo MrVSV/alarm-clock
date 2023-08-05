@@ -2,9 +2,11 @@ package com.vsv.ruleyourtime.presentation.alarms_screen
 
 import android.Manifest
 import android.app.AlarmManager
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.os.Build
 import android.text.format.DateFormat
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -111,6 +113,7 @@ fun AlarmsScreen(
         floatingActionButton = {
             LargeFloatingActionButton(
                 onClick = {
+                    Log.d(TAG, "AlarmsScreen: $state")
                     if (!state.isAlarmsEnable) {
                         onEvent(AlarmScreenEvent.ShowAlarmRationale)
                     } else if (!state.isNotificationEnable) {

@@ -13,4 +13,6 @@ interface Repository {
 
     suspend fun deleteAlarm(alarmItem: AlarmItem)
 
+    suspend fun disableAlarm(alarmItem: AlarmItem)
+
 }

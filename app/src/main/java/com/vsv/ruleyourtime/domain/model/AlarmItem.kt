@@ -7,7 +7,6 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class AlarmItem(
     val id: Int = 0,
-//    val alarmTimeMillis: Long,
     val isEnabled: Boolean,
     val hours: Int,
     val minutes: Int

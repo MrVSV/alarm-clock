@@ -81,8 +81,8 @@ fun TimePickerDialog(
                 onClick = {
                     onEvent(
                         AlarmScreenEvent.SetAlarmTime(
-                            timePickerState.hour,
-                            timePickerState.minute
+                            hours = timePickerState.hour,
+                            minutes = timePickerState.minute,
                         )
                     )
                 },

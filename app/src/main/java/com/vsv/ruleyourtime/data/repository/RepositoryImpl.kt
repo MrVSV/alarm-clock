@@ -1,9 +1,9 @@
 package com.vsv.ruleyourtime.data.repository
 
 import com.vsv.ruleyourtime.data.local_db.AlarmsDao
+import com.vsv.ruleyourtime.domain.alarm_clock.Scheduler
 import com.vsv.ruleyourtime.domain.model.AlarmItem
 import com.vsv.ruleyourtime.domain.repository.Repository
-import com.vsv.ruleyourtime.domain.alarm_clock.Scheduler
 import com.vsv.ruleyourtime.utils.toListModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,10 +32,15 @@ class RepositoryImpl(
         alarmScheduler.cancel(alarmItem.toEntity())
     }
 
+    override suspend fun disableAlarm(alarmItem: AlarmItem) {
+        alarmsDao.addAlarm(alarmItem.toEntity())
+        alarmScheduler.cancel(alarmItem.toEntity())
+    }
+
     override suspend fun addAlarm(alarmItem: AlarmItem): Boolean {
         return try {
-            alarmScheduler.schedule(alarmItem.toEntity())
             alarmsDao.addAlarm(alarmItem.toEntity())
+            alarmScheduler.schedule(alarmsDao.getLastUpdatedAlarm())
             true
         } catch (e: SecurityException) {
             false

@@ -38,7 +38,7 @@ class AlarmsScreenViewModel(
         combine(_state, _alarms, _userPreferences) { state, alarms, prefs ->
             state.copy(
                 alarms = alarms,
-                hours = LocalTime.now().hour + 1,
+                hours = if(LocalTime.now().hour < 23) LocalTime.now().hour + 1  else 0,
                 minutes = LocalTime.now().minute,
                 isAlarmRationaleShown = prefs.isAlarmRationaleShown,
                 isNotificationRationaleShown = prefs.isNotificationRationaleShown
@@ -141,6 +141,28 @@ class AlarmsScreenViewModel(
             AlarmScreenEvent.ChangeTimePickerInputMode -> {
                 _state.update {
                     it.copy(isDialTimePickerInputMode = !it.isDialTimePickerInputMode)
+                }
+            }
+            is AlarmScreenEvent.DisableAlarm -> {
+                val alarmItem = AlarmItem(
+                    id = event.alarmItem.id,
+                    hours = event.alarmItem.hours,
+                    minutes = event.alarmItem.minutes,
+                    isEnabled = false,
+                )
+                viewModelScope.launch {
+                    repository.disableAlarm(alarmItem = alarmItem)
+                }
+            }
+            is AlarmScreenEvent.EnableAlarm -> {
+                val alarmItem = AlarmItem(
+                    id = event.alarmItem.id,
+                    hours = event.alarmItem.hours,
+                    minutes = event.alarmItem.minutes,
+                    isEnabled = true,
+                )
+                viewModelScope.launch {
+                    repository.addAlarm(alarmItem = alarmItem)
                 }
             }
         }

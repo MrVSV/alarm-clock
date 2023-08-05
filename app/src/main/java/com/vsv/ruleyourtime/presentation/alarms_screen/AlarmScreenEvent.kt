@@ -7,6 +7,8 @@ sealed interface AlarmScreenEvent{
     object ShowTimePicker: AlarmScreenEvent
     object CloseTimePicker: AlarmScreenEvent
     data class DeleteAlarm(val alarmItem: AlarmItem): AlarmScreenEvent
+    data class EnableAlarm(val alarmItem: AlarmItem): AlarmScreenEvent
+    data class DisableAlarm(val alarmItem: AlarmItem): AlarmScreenEvent
     object OnSnackbarClose: AlarmScreenEvent
     object ShowAlarmRationale: AlarmScreenEvent
     object ShowNotificationRationale: AlarmScreenEvent

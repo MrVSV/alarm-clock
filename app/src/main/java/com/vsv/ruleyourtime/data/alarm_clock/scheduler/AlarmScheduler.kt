@@ -24,6 +24,7 @@ class AlarmScheduler(
 
     @SuppressLint("ScheduleExactAlarm")
     override fun schedule(entity: AlarmItemEntity) {
+        Log.d(TAG, "schedule: $entity")
         alarmManager?.setAlarmClock(
             setAlarmInfo(entity),
             setAlarmPendingIntent(entity)
