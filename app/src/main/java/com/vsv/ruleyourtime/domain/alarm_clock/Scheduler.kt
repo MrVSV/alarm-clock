@@ -1,4 +1,4 @@
-package com.vsv.ruleyourtime.domain.scheduler
+package com.vsv.ruleyourtime.domain.alarm_clock
 
 import com.vsv.ruleyourtime.data.local_db.AlarmItemEntity
 

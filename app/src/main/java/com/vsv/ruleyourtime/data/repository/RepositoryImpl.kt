@@ -3,7 +3,7 @@ package com.vsv.ruleyourtime.data.repository
 import com.vsv.ruleyourtime.data.local_db.AlarmsDao
 import com.vsv.ruleyourtime.domain.model.AlarmItem
 import com.vsv.ruleyourtime.domain.repository.Repository
-import com.vsv.ruleyourtime.domain.scheduler.Scheduler
+import com.vsv.ruleyourtime.domain.alarm_clock.Scheduler
 import com.vsv.ruleyourtime.utils.toListModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

@@ -7,7 +7,7 @@ import com.vsv.ruleyourtime.di.dataBaseModule
 import com.vsv.ruleyourtime.di.dataStoreModule
 import com.vsv.ruleyourtime.di.repositoryModule
 import com.vsv.ruleyourtime.di.viewModelModule
-import com.vsv.ruleyourtime.domain.notification.AppNotification
+import com.vsv.ruleyourtime.domain.alarm_clock.AppNotification
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger

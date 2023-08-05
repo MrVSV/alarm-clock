@@ -9,7 +9,7 @@ import android.media.MediaPlayer
 import android.media.RingtoneManager
 import android.os.IBinder
 import android.util.Log
-import com.vsv.ruleyourtime.domain.notification.AppNotification
+import com.vsv.ruleyourtime.domain.alarm_clock.AppNotification
 import org.koin.android.ext.android.inject
 import org.koin.core.qualifier.named
 

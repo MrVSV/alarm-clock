@@ -12,7 +12,7 @@ import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.vsv.ruleyourtime.R
-import com.vsv.ruleyourtime.domain.notification.AppNotification
+import com.vsv.ruleyourtime.domain.alarm_clock.AppNotification
 import com.vsv.ruleyourtime.presentation.AlarmActivity
 import java.text.SimpleDateFormat
 import java.util.Locale

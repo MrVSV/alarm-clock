@@ -1,4 +1,4 @@
-package com.vsv.ruleyourtime.domain.notification
+package com.vsv.ruleyourtime.domain.alarm_clock
 
 import android.app.Notification
 import androidx.core.app.NotificationChannelCompat

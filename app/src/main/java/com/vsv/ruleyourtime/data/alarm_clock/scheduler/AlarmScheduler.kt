@@ -10,7 +10,7 @@ import android.content.Intent
 import android.util.Log
 import com.vsv.ruleyourtime.data.alarm_clock.receivers.AlarmReceiver
 import com.vsv.ruleyourtime.data.local_db.AlarmItemEntity
-import com.vsv.ruleyourtime.domain.scheduler.Scheduler
+import com.vsv.ruleyourtime.domain.alarm_clock.Scheduler
 import com.vsv.ruleyourtime.presentation.MainActivity
 import com.vsv.ruleyourtime.utils.MyCalendar
 
