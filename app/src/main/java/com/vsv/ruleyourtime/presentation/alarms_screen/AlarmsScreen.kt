@@ -62,7 +62,7 @@ fun AlarmsScreen(
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranded ->
-            if (isGranded) onEvent(AlarmScreenEvent.ShowTimePicker)
+            if (isGranded) onEvent(AlarmScreenEvent.ShowTimePicker(state.selectedAlarm))
             else {
                 if (context.findActivity()
                         .shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)
@@ -121,7 +121,7 @@ fun AlarmsScreen(
                             permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                         }
                     } else {
-                        onEvent(AlarmScreenEvent.ShowTimePicker)
+                        onEvent(AlarmScreenEvent.ShowTimePicker(state.selectedAlarm))
                     }
                 }
             ) {

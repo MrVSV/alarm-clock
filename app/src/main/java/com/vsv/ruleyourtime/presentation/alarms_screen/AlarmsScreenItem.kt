@@ -52,22 +52,22 @@ fun AlarmsScreenItem(
                 fontSize = 36.sp,
                 modifier = Modifier
                     .weight(1f)
-                    .clickable { }
+                    .clickable { onEvent(AlarmScreenEvent.ShowTimePicker(alarmItem = alarm)) }
             )
             Switch(
                 checked = alarm.isEnabled,
                 enabled = state.isAlarmsEnable,
                 onCheckedChange = {
                     if (alarm.isEnabled)
-                        onEvent(AlarmScreenEvent.DisableAlarm(alarm))
+                        onEvent(AlarmScreenEvent.DisableAlarm(alarmItem = alarm))
                     else
-                        onEvent(AlarmScreenEvent.EnableAlarm(alarm))
+                        onEvent(AlarmScreenEvent.EnableAlarm(alarmItem = alarm))
                 },
             )
 
         }
         IconButton(
-            onClick = { onEvent(AlarmScreenEvent.DeleteAlarm(alarm)) }
+            onClick = { onEvent(AlarmScreenEvent.DeleteAlarm(alarmItem = alarm)) }
         ) {
             Icon(
                 imageVector = Icons.Default.Delete,

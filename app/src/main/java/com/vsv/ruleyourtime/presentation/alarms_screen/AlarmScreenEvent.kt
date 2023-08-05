@@ -3,8 +3,8 @@ package com.vsv.ruleyourtime.presentation.alarms_screen
 import com.vsv.ruleyourtime.domain.model.AlarmItem
 
 sealed interface AlarmScreenEvent{
-    data class SetAlarmTime(val hours: Int, val minutes: Int): AlarmScreenEvent
-    object ShowTimePicker: AlarmScreenEvent
+    data class SetAlarmTime(val id: Int = 0, val hours: Int, val minutes: Int): AlarmScreenEvent
+    data class ShowTimePicker(val alarmItem: AlarmItem?): AlarmScreenEvent
     object CloseTimePicker: AlarmScreenEvent
     data class DeleteAlarm(val alarmItem: AlarmItem): AlarmScreenEvent
     data class EnableAlarm(val alarmItem: AlarmItem): AlarmScreenEvent

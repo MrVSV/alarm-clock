@@ -1,5 +1,7 @@
 package com.vsv.ruleyourtime.presentation.common
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -31,9 +33,10 @@ fun TimePickerDialog(
     onEvent: (AlarmScreenEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    Log.d(TAG, "TimePickerDialog: ${state.selectedAlarm}")
     val timePickerState = rememberTimePickerState(
-        initialHour = state.hours,
-        initialMinute = state.minutes,
+        initialHour = state.selectedAlarm?.hours ?: state.hours,
+        initialMinute = state.selectedAlarm?.minutes ?: state.minutes,
         is24Hour = state.is24HourFormat
     )
     DatePickerDialog(
@@ -79,8 +82,11 @@ fun TimePickerDialog(
             }
             TextButton(
                 onClick = {
+                    Log.d(TAG, "TimePickerDialog confirm: ${state.selectedAlarm}")
+
                     onEvent(
                         AlarmScreenEvent.SetAlarmTime(
+                            id = state.selectedAlarm?.id ?: 0,
                             hours = timePickerState.hour,
                             minutes = timePickerState.minute,
                         )

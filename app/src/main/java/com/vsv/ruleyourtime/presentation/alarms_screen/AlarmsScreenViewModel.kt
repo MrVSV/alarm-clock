@@ -51,9 +51,12 @@ class AlarmsScreenViewModel(
 
     fun onEvent(event: AlarmScreenEvent) {
         when (event) {
-            AlarmScreenEvent.ShowTimePicker -> {
+            is AlarmScreenEvent.ShowTimePicker -> {
                 _state.update {
-                    it.copy(isAddingAlarm = true)
+                    it.copy(
+                        isAddingAlarm = true,
+                        selectedAlarm = event.alarmItem
+                    )
                 }
             }
             AlarmScreenEvent.CloseTimePicker -> {
@@ -63,6 +66,7 @@ class AlarmsScreenViewModel(
             }
             is AlarmScreenEvent.SetAlarmTime -> {
                 val alarmItem = AlarmItem(
+                    id = event.id,
                     hours = event.hours,
                     minutes = event.minutes,
                     isEnabled = true
@@ -70,12 +74,12 @@ class AlarmsScreenViewModel(
                 viewModelScope.launch {
                     if (repository.addAlarm(alarmItem = alarmItem)) {
                         _state.update {
-                            it.copy(isAddingAlarm = false)
+                            it.copy(isAddingAlarm = false, selectedAlarm = null)
                         }
                     } else {
                         Log.d(TAG, "onEvent: error")
                         _state.update {
-                            it.copy(isAddingAlarm = false, isError = true)
+                            it.copy(isAddingAlarm = false, selectedAlarm = null)
                         }
                     }
                 }

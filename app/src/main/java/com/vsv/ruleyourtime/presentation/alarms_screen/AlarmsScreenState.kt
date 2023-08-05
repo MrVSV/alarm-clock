@@ -4,6 +4,7 @@ import com.vsv.ruleyourtime.domain.model.AlarmItem
 
 data class AlarmsScreenState(
     val alarms: List<AlarmItem> = emptyList(),
+    val selectedAlarm : AlarmItem? = null,
     val hours: Int = 12,
     val minutes: Int = 0,
     val is24HourFormat: Boolean = true,
