@@ -42,6 +42,7 @@ fun AlarmsScreenItem(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
+            .padding(horizontal = 8.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

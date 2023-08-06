@@ -4,6 +4,7 @@ import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.vsv.core.utils.Event
 import com.vsv.feature_alarm_clock.domain.model.AlarmItem
 import com.vsv.feature_alarm_clock.domain.preferences.UserPreferences
 import com.vsv.feature_alarm_clock.domain.repository.Repository
@@ -49,7 +50,7 @@ class AlarmsScreenViewModel(
             initialValue = AlarmsScreenState()
         )
 
-    fun onEvent(event: AlarmScreenEvent) {
+    fun onEvent(event: Event) {
         when (event) {
             is AlarmScreenEvent.ShowTimePicker -> {
                 _state.update {
@@ -127,12 +128,12 @@ class AlarmsScreenViewModel(
                     it.copy(isShouldShowNotificationRationale = false)
                 }
             }
-            is AlarmScreenEvent.CheckAlarmPermissionState -> {
+            is Event.CheckAlarmPermissionState -> {
                 _state.update {
                     it.copy(isAlarmsEnable = event.isGranted)
                 }
             }
-            is AlarmScreenEvent.CheckNotificationPermissionState -> {
+            is Event.CheckNotificationPermissionState -> {
                 _state.update {
                     it.copy(isNotificationEnable = event.isGranted)
                 }

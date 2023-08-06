@@ -1,4 +1,4 @@
-package com.vsv.ruleyourtime.presentation.ui.theme
+package com.vsv.core_ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

@@ -8,9 +8,9 @@ import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import com.vsv.core.utils.MyCalendar
 import com.vsv.feature_alarm_clock.data.alarm_clock.receivers.AlarmReceiver
 import com.vsv.feature_alarm_clock.domain.alarm_clock.Scheduler
-import com.vsv.feature_alarm_clock.utils.MyCalendar
 import com.vsv.local_data_base.data_base.AlarmItemEntity
 
 class AlarmScheduler(
@@ -18,24 +18,23 @@ class AlarmScheduler(
     private val calendar: MyCalendar,
 ) : Scheduler {
 
-    private val alarmManager =
-        context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
+    private val alarmManager = context.getSystemService(AlarmManager::class.java)
 
     @SuppressLint("ScheduleExactAlarm")
     override fun schedule(entity: AlarmItemEntity) {
         Log.d(TAG, "schedule: $entity")
-        alarmManager?.setAlarmClock(
+        alarmManager.setAlarmClock(
             setAlarmInfo(entity),
             setAlarmPendingIntent(entity)
         )
     }
 
     override fun disable(entity: AlarmItemEntity) {
-        Log.d(TAG, "disable: ${alarmManager?.nextAlarmClock?.triggerTime}")
+        Log.d(TAG, "disable: ${alarmManager.nextAlarmClock.triggerTime}")
     }
 
     override fun cancel(entity: AlarmItemEntity) {
-        alarmManager?.cancel(setAlarmPendingIntent(entity))
+        alarmManager.cancel(setAlarmPendingIntent(entity))
     }
 
     private fun setAlarmInfo(entity: AlarmItemEntity): AlarmClockInfo {

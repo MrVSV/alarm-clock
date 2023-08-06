@@ -8,6 +8,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import com.vsv.core.extensions.turnScreenOffAndKeyguardOn
 import com.vsv.core.extensions.turnScreenOnAndKeyguardOff
+import com.vsv.core_ui.theme.RuleYourTimeTheme
 import com.vsv.feature_alarm_clock.data.alarm_clock.foreground_services.AlarmService
 import com.vsv.feature_alarm_clock.data.alarm_clock.foreground_services.AlarmServiceCommands
 
@@ -17,7 +18,7 @@ class AlarmActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         turnScreenOnAndKeyguardOff()
         setContent {
-//            RuleYourTimeTheme {
+            RuleYourTimeTheme {
                 Button(
                     onClick = {
                         Intent(this, AlarmService::class.java).also{
@@ -29,7 +30,7 @@ class AlarmActivity : ComponentActivity() {
                 ) {
                     Text(text = "finish")
                 }
-//            }
+            }
         }
     }
 

@@ -1,9 +1,7 @@
 package com.vsv.feature_alarm_clock.presentation.alarms_screen
 
 import android.Manifest
-import android.app.AlarmManager
 import android.content.ContentValues.TAG
-import android.content.Context
 import android.os.Build
 import android.text.format.DateFormat
 import android.util.Log
@@ -32,15 +30,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavController
 import com.vsv.core.extensions.findActivity
 import com.vsv.core.extensions.openAlarmPermissionSettings
 import com.vsv.core.extensions.openNotificationPermissionSettings
+import com.vsv.core.utils.Event
+import com.vsv.core.utils.checkAlarmPermissionState
+import com.vsv.core.utils.checkNotificationPermissionState
 import com.vsv.feature_alarm_clock.presentation.common.AlarmRationaleDialog
 import com.vsv.feature_alarm_clock.presentation.common.NotificationRationaleDialog
 import com.vsv.feature_alarm_clock.presentation.common.TimePickerDialog
@@ -48,14 +49,11 @@ import com.vsv.feature_alarm_clock.presentation.common.TimePickerDialog
 @Composable
 fun AlarmsScreen(
     state: AlarmsScreenState,
-    onEvent: (AlarmScreenEvent) -> Unit,
+    onEvent: (Event) -> Unit,
     navController: NavController,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val alarmManager =
-        context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
-    val notificationManager = NotificationManagerCompat.from(context)
     val lifecycleOwner = LocalLifecycleOwner.current
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
@@ -74,8 +72,8 @@ fun AlarmsScreen(
     DisposableEffect(key1 = lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
-                alarmManager?.checkAlarmPermissionState(onEvent)
-                notificationManager.checkNotificationPermissionState(onEvent)
+                checkAlarmPermissionState(context, onEvent)
+                checkNotificationPermissionState(context, onEvent)
                 onEvent(AlarmScreenEvent.CheckTimeFormat(DateFormat.is24HourFormat(context)))
             }
         }
@@ -197,13 +195,12 @@ fun AlarmsScreen(
     }
 }
 
-fun AlarmManager.checkAlarmPermissionState(onEvent: (AlarmScreenEvent) -> Unit) {
-    val isGranded =  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-        this.canScheduleExactAlarms()
-    else true
-    onEvent(AlarmScreenEvent.CheckAlarmPermissionState(isGranded))
-}
-
-fun NotificationManagerCompat.checkNotificationPermissionState(onEvent: (AlarmScreenEvent) -> Unit) {
-    onEvent(AlarmScreenEvent.CheckNotificationPermissionState(this.areNotificationsEnabled()))
+@Preview
+@Composable
+fun AlarmsScreenPreview() {
+    AlarmsScreen(
+        state = AlarmsScreenState(),
+        onEvent = {},
+        navController = NavController(LocalContext.current),
+    )
 }

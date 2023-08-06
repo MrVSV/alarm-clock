@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.vsv.feature_alarm_clock"
+    namespace = "com.vsv.core_ui"
     compileSdk = Config.compileSdk
 
     defaultConfig {
@@ -45,10 +45,6 @@ android {
 
 dependencies {
 
-    implementation(project(":local_data_base"))
-    implementation(project(":core"))
-    implementation(project(":core_ui"))
-
     implementation(Dependencies.Core.core)
     implementation(platform(Dependencies.Core.kotlinBom))
 
@@ -71,7 +67,4 @@ dependencies {
     implementation(Dependencies.Koin.koin)
     implementation(Dependencies.Koin.koinAndroidxCompose)
     testImplementation(Dependencies.Koin.koinTestJunit4)
-
-    implementation(Dependencies.DataStore.preferencesDataStore)
-
 }

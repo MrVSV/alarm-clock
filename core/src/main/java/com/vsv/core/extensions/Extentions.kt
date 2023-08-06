@@ -1,6 +1,7 @@
 package com.vsv.core.extensions
 
 import android.app.Activity
+import android.app.AlarmManager
 import android.app.KeyguardManager
 import android.content.Context
 import android.content.ContextWrapper
@@ -12,6 +13,21 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.provider.Settings
 import android.view.WindowManager
+import androidx.core.app.NotificationManagerCompat
+import com.vsv.core.utils.Event
+
+
+fun AlarmManager.checkAlarmPermissionState(onEvent: (Event) -> Unit) {
+    val isGranded =  if (SDK_INT >= Build.VERSION_CODES.S)
+        this.canScheduleExactAlarms()
+    else true
+    onEvent(Event.CheckAlarmPermissionState(isGranded))
+}
+
+fun NotificationManagerCompat.checkNotificationPermissionState(onEvent: (Event) -> Unit) {
+    onEvent(Event.CheckNotificationPermissionState(this.areNotificationsEnabled()))
+}
+
 
 fun Context.openAlarmPermissionSettings() {
     if (SDK_INT >= Build.VERSION_CODES.S) {

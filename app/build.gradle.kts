@@ -51,9 +51,10 @@ android {
 
 dependencies {
 
+    implementation(project(":feature_alarm_clock"))
     implementation(project(":local_data_base"))
     implementation(project(":core"))
-    implementation(project(":feature_alarm_clock"))
+    implementation(project(":core_ui"))
 
     implementation(Dependencies.Core.core)
     implementation(platform(Dependencies.Core.kotlinBom))

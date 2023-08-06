@@ -1,4 +1,4 @@
-package com.vsv.feature_alarm_clock.utils
+package com.vsv.core.utils
 
 import java.util.Calendar
 

@@ -1,8 +1,9 @@
 package com.vsv.feature_alarm_clock.presentation.alarms_screen
 
+import com.vsv.core.utils.Event
 import com.vsv.feature_alarm_clock.domain.model.AlarmItem
 
-sealed interface AlarmScreenEvent{
+sealed interface AlarmScreenEvent: Event{
     data class SetAlarmTime(val id: Int = 0, val hours: Int, val minutes: Int): AlarmScreenEvent
     data class ShowTimePicker(val alarmItem: AlarmItem?): AlarmScreenEvent
     object CloseTimePicker: AlarmScreenEvent
@@ -14,8 +15,8 @@ sealed interface AlarmScreenEvent{
     object ShowNotificationRationale: AlarmScreenEvent
     object CloseAlarmRationale: AlarmScreenEvent
     object CloseNotificationRationale: AlarmScreenEvent
-    data class CheckAlarmPermissionState(val isGranted: Boolean): AlarmScreenEvent
-    data class CheckNotificationPermissionState(val isGranted: Boolean): AlarmScreenEvent
+    data class CheckAlarmPermissionState(val isGranted: Boolean): AlarmScreenEvent // в коре
+    data class CheckNotificationPermissionState(val isGranted: Boolean): AlarmScreenEvent // в коре
     data class CheckTimeFormat(val is24HourFormat: Boolean): AlarmScreenEvent
     object ChangeTimePickerInputMode: AlarmScreenEvent
 }

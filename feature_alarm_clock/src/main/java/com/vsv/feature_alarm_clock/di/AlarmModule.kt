@@ -3,7 +3,7 @@ package com.vsv.feature_alarm_clock.di
 import com.vsv.feature_alarm_clock.data.alarm_clock.scheduler.AlarmScheduler
 import com.vsv.feature_alarm_clock.domain.alarm_clock.AppNotification
 import com.vsv.feature_alarm_clock.domain.alarm_clock.Scheduler
-import com.vsv.feature_alarm_clock.utils.MyCalendar
+import com.vsv.core.utils.MyCalendar
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
