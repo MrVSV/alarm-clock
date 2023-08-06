@@ -1,22 +1,21 @@
-package com.vsv.feature_alarm_clock.data.alarm_clock.receivers
+package com.vsv.core.data
 
 import android.content.BroadcastReceiver
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import com.vsv.feature_alarm_clock.data.alarm_clock.foreground_services.AlarmService
-import com.vsv.feature_alarm_clock.data.alarm_clock.foreground_services.AlarmServiceCommands
+import com.vsv.core.data.AlarmScheduler.Companion.ALARM_ITEM_ID
 
 
 class AlarmReceiver: BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-        val item = intent.getIntExtra("alarm_item", 0)
+        val itemId = intent.getIntExtra(ALARM_ITEM_ID, 0)
         Log.d(TAG, "onReceive: extr ${intent.extras}")
         Intent(context, AlarmService::class.java).also{
             it.action = AlarmServiceCommands.START.toString()
-            it.putExtra("alarm_item", item)
+            it.putExtra(ALARM_ITEM_ID, itemId)
             context.startForegroundService(it)
         }
     }

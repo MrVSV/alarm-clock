@@ -16,7 +16,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vsv.feature_alarm_clock.domain.model.AlarmItem
@@ -65,7 +64,6 @@ fun AlarmsScreenItem(
                         onEvent(AlarmScreenEvent.EnableAlarm(alarmItem = alarm))
                 },
             )
-
         }
         IconButton(
             onClick = { onEvent(AlarmScreenEvent.DeleteAlarm(alarmItem = alarm)) }
@@ -78,16 +76,4 @@ fun AlarmsScreenItem(
             )
         }
     }
-}
-
-@Preview
-@Composable
-fun AlarmsScreenItemPreview() {
-    AlarmsScreenItem(
-        alarm = AlarmItem(id = 1, isEnabled = true, hours = 14, minutes = 30),
-        state = AlarmsScreenState(
-            isAlarmsEnable = true,
-        ),
-        onEvent = { }
-    )
 }

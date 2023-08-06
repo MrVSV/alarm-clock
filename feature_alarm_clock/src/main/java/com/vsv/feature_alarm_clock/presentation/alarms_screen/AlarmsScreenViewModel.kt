@@ -4,6 +4,7 @@ import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.vsv.core.domain.ScheduleResult
 import com.vsv.core.utils.Event
 import com.vsv.feature_alarm_clock.domain.model.AlarmItem
 import com.vsv.feature_alarm_clock.domain.preferences.UserPreferences
@@ -39,7 +40,7 @@ class AlarmsScreenViewModel(
         combine(_state, _alarms, _userPreferences) { state, alarms, prefs ->
             state.copy(
                 alarms = alarms,
-                hours = if(LocalTime.now().hour < 23) LocalTime.now().hour + 1  else 0,
+                hours = if (LocalTime.now().hour < 23) LocalTime.now().hour + 1 else 0,
                 minutes = LocalTime.now().minute,
                 isAlarmRationaleShown = prefs.isAlarmRationaleShown,
                 isNotificationRationaleShown = prefs.isNotificationRationaleShown
@@ -73,14 +74,17 @@ class AlarmsScreenViewModel(
                     isEnabled = true
                 )
                 viewModelScope.launch {
-                    if (repository.addAlarm(alarmItem = alarmItem)) {
-                        _state.update {
-                            it.copy(isAddingAlarm = false, selectedAlarm = null)
+                    when (repository.addAlarm(alarmItem = alarmItem)) {
+                        ScheduleResult.Success -> {
+                            _state.update {
+                                it.copy(isAddingAlarm = false, selectedAlarm = null)
+                            }
                         }
-                    } else {
-                        Log.d(TAG, "onEvent: error")
-                        _state.update {
-                            it.copy(isAddingAlarm = false, selectedAlarm = null)
+                        is ScheduleResult.Error -> {
+                            Log.d(TAG, "onEvent: error")
+                            _state.update {
+                                it.copy(isAddingAlarm = false, selectedAlarm = null)
+                            }
                         }
                     }
                 }

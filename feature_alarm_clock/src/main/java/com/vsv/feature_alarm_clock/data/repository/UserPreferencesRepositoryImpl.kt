@@ -14,12 +14,6 @@ class UserPreferencesRepositoryImpl(
     private val dataStore: DataStore<Preferences>,
 ) : UserPreferencesRepository {
 
-//    companion object {
-//        val IS_ALARM_RATIONALE_SHOWN = booleanPreferencesKey("is_alarm_rationale_shown")
-//        val IS_NOTIFICATION_RATIONALE_SHOWN =
-//            booleanPreferencesKey("is_notification_rationale_shown")
-//    }
-
     override suspend fun <T> saveToPreferences(preferencesKey: Preferences.Key<T>, value: T) {
         dataStore.edit { prefs ->
             prefs[preferencesKey] = value

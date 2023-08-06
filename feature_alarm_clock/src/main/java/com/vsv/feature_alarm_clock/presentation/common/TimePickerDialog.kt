@@ -83,7 +83,6 @@ fun TimePickerDialog(
             TextButton(
                 onClick = {
                     Log.d(TAG, "TimePickerDialog confirm: ${state.selectedAlarm}")
-
                     onEvent(
                         AlarmScreenEvent.SetAlarmTime(
                             id = state.selectedAlarm?.id ?: 0,

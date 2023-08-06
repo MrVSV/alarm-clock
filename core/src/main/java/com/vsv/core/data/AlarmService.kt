@@ -1,4 +1,4 @@
-package com.vsv.feature_alarm_clock.data.alarm_clock.foreground_services
+package com.vsv.core.data
 
 import android.app.Service
 import android.content.ContentValues.TAG
@@ -9,7 +9,8 @@ import android.media.MediaPlayer
 import android.media.RingtoneManager
 import android.os.IBinder
 import android.util.Log
-import com.vsv.feature_alarm_clock.domain.alarm_clock.AppNotification
+import com.vsv.core.data.AlarmScheduler.Companion.ALARM_ITEM_ID
+import com.vsv.core.domain.AppNotification
 import org.koin.android.ext.android.inject
 import org.koin.core.qualifier.named
 
@@ -39,14 +40,11 @@ class AlarmService : Service() {
             isLooping = true
             prepare()
         }
-        Log.d(TAG, "onCreate: ")
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        val item = intent.getIntExtra("alarm_item", 0)
-//        if (item != null) {
-        startForeground(1, notification.getNotification(item))
-//        }
+        val itemId = intent.getIntExtra(ALARM_ITEM_ID, 0)
+        startForeground(1, notification.getNotification(itemId))
         when (intent.action) {
             AlarmServiceCommands.START.toString() -> mediaPlayer.start()
             AlarmServiceCommands.STOP.toString() -> {
@@ -54,8 +52,8 @@ class AlarmService : Service() {
                 stopSelf()
             }
         }
-        Log.d(TAG, "onStartCommand: $item")
-        Log.d(TAG, "onStartCommand: itm ${item.hashCode()}")
+        Log.d(TAG, "onStartCommand: $itemId")
+        Log.d(TAG, "onStartCommand: itm ${itemId.hashCode()}")
         Log.d(TAG, "onStartCommand: ${intent.extras}")
         return super.onStartCommand(intent, flags, startId)
     }

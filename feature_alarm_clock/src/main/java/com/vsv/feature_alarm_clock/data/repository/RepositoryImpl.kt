@@ -1,6 +1,7 @@
 package com.vsv.feature_alarm_clock.data.repository
 
-import com.vsv.feature_alarm_clock.domain.alarm_clock.Scheduler
+import com.vsv.core.domain.ScheduleResult
+import com.vsv.core.domain.Scheduler
 import com.vsv.feature_alarm_clock.domain.model.AlarmItem
 import com.vsv.feature_alarm_clock.domain.repository.Repository
 import com.vsv.feature_alarm_clock.utils.toListModel
@@ -37,14 +38,9 @@ class RepositoryImpl(
         alarmScheduler.cancel(alarmItem.toEntity())
     }
 
-    override suspend fun addAlarm(alarmItem: AlarmItem): Boolean {
-        return try {
+    override suspend fun addAlarm(alarmItem: AlarmItem): ScheduleResult {
             alarmsDao.addAlarm(alarmItem.toEntity())
-            alarmScheduler.schedule(alarmsDao.getLastUpdatedAlarm())
-            true
-        } catch (e: SecurityException) {
-            false
-        }
+           return alarmScheduler.schedule(alarmsDao.getLastUpdatedAlarm())
     }
 
     override fun getAlarmList(): Flow<List<AlarmItem>> {

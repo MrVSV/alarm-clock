@@ -2,11 +2,11 @@ package com.vsv.ruleyourtime.app
 
 import android.app.Application
 import androidx.core.app.NotificationManagerCompat
-import com.vsv.feature_alarm_clock.di.alarmModule
+import com.vsv.core.di.alarmModule
 import com.vsv.feature_alarm_clock.di.dataStoreModule
 import com.vsv.feature_alarm_clock.di.repositoryModule
 import com.vsv.feature_alarm_clock.di.viewModelModule
-import com.vsv.feature_alarm_clock.domain.alarm_clock.AppNotification
+import com.vsv.core.domain.AppNotification
 import com.vsv.local_data_base.di.dataBaseModule
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext

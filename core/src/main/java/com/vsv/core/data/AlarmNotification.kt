@@ -1,4 +1,4 @@
-package com.vsv.feature_alarm_clock.data.alarm_clock.foreground_services
+package com.vsv.core.data
 
 import android.app.Notification
 import android.app.NotificationManager
@@ -12,8 +12,7 @@ import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.vsv.core.R
-import com.vsv.feature_alarm_clock.domain.alarm_clock.AppNotification
-import com.vsv.feature_alarm_clock.presentation.AlarmActivity
+import com.vsv.core.domain.AppNotification
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -45,7 +44,7 @@ class AlarmNotification(
     }
 
     override fun getNotification(itemId: Int): Notification {
-        val activityIntent = Intent(context, AlarmActivity::class.java)
+        val activityIntent = Intent("com.vsv.app.alarmactivity")
         val pendingIntent =
             PendingIntent.getActivity(
                 context,

@@ -1,4 +1,4 @@
-package com.vsv.feature_alarm_clock.domain.alarm_clock
+package com.vsv.core.domain
 
 import android.app.Notification
 import androidx.core.app.NotificationChannelCompat

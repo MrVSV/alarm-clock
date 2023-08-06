@@ -1,14 +1,15 @@
 package com.vsv.feature_alarm_clock.domain.model
 
+import com.vsv.core.domain.Item
 import com.vsv.local_data_base.data_base.AlarmItemEntity
 
 
 data class AlarmItem(
-    val id: Int = 0,
+    override val id: Int = 0,
     val isEnabled: Boolean,
-    val hours: Int,
-    val minutes: Int
-) {
+    override val hours: Int,
+    override val minutes: Int
+): Item {
 
     fun toEntity() = AlarmItemEntity(
         id = id,
@@ -16,8 +17,6 @@ data class AlarmItem(
         hours = hours,
         minutes = minutes,
         )
-
-
 }
 
 fun AlarmItemEntity.toModel(): AlarmItem = AlarmItem(

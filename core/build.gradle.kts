@@ -36,4 +36,8 @@ dependencies {
 
     implementation(Dependencies.Core.core)
     implementation(platform(Dependencies.Core.kotlinBom))
+
+    implementation(Dependencies.Koin.koin)
+    implementation(Dependencies.Koin.koinAndroidxCompose)
+    testImplementation(Dependencies.Koin.koinTestJunit4)
 }
