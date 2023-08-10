@@ -36,6 +36,9 @@ object Dependencies {
         const val junit = "junit:junit:4.13.2"
         const val androidTest = "androidx.test.ext:junit:1.1.5"
         const val espresso = "androidx.test.espresso:espresso-core:3.5.1"
+        const val truth = "com.google.truth:truth:1.1.4"
+        const val mockitoCore = "org.mockito:mockito-core:5.4.0"
+        const val mockitoKotlin = "org.mockito.kotlin:mockito-kotlin:5.1.0"
     }
 
     object DataStore {

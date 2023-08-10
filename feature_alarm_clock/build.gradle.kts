@@ -74,4 +74,11 @@ dependencies {
 
     implementation(Dependencies.DataStore.preferencesDataStore)
 
+    testImplementation(Dependencies.Test.junit)
+    testImplementation(Dependencies.Test.truth)
+    testImplementation(Dependencies.Test.mockitoCore)
+    testImplementation(Dependencies.Test.mockitoKotlin)
+    androidTestImplementation(Dependencies.Test.androidTest)
+    androidTestImplementation(Dependencies.Test.espresso)
+
 }
