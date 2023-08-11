@@ -39,6 +39,7 @@ object Dependencies {
         const val truth = "com.google.truth:truth:1.1.4"
         const val mockitoCore = "org.mockito:mockito-core:5.4.0"
         const val mockitoKotlin = "org.mockito.kotlin:mockito-kotlin:5.1.0"
+        const val coroutinesTest = "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3"
     }
 
     object DataStore {

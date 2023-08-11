@@ -39,18 +39,13 @@ class RepositoryImpl(
     }
 
     override suspend fun addAlarm(alarmItem: AlarmItem): ScheduleResult {
-            alarmsDao.addAlarm(alarmItem.toEntity())
-           return alarmScheduler.schedule(alarmsDao.getLastUpdatedAlarm())
+        alarmsDao.addAlarm(alarmItem.toEntity())
+        return alarmScheduler.schedule(alarmsDao.getLastUpdatedAlarm())
     }
 
     override fun getAlarmList(): Flow<List<AlarmItem>> {
         return alarmsDao.getAlarmsList().map { listEntity ->
             listEntity.toListModel()
         }
-    }
-
-    private suspend fun scheduleAlarm() {
-        val entity = alarmsDao.getLastUpdatedAlarm()
-        alarmScheduler.schedule(entity)
     }
 }

@@ -2,28 +2,40 @@ package com.vsv.feature_alarm_clock.data.repository
 
 import com.google.common.truth.Truth.assertThat
 import com.vsv.core.domain.ScheduleResult
-import com.vsv.core.domain.Scheduler
 import com.vsv.feature_alarm_clock.domain.model.AlarmItem
-import com.vsv.local_data_base.data_base.AlarmsDao
-import kotlinx.coroutines.runBlocking
+import com.vsv.feature_alarm_clock.domain.repository.Repository
+import kotlinx.coroutines.test.runTest
+import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.times
-import org.mockito.Mockito.verify
 
 class RepositoryTest {
 
-    private val scheduler = mock<Scheduler>()
-    private val dao = mock<AlarmsDao>()
+    private lateinit var fakeScheduler: FakeScheduler
+    private lateinit var fakeDao: FakeAlarmsDao
+    private lateinit var repository: Repository
+    private val alarmItem1 = AlarmItem(id = 1, isEnabled = true, hours = 12, minutes = 30)
+
+    @Before
+    fun setUp() {
+        fakeScheduler = FakeScheduler()
+        fakeScheduler.canScheduleAlarm = true
+        fakeDao = FakeAlarmsDao()
+        repository = RepositoryImpl(fakeDao, fakeScheduler)
+
+    }
 
     @Test
-    fun schedule_correct_alarm() {
-        val repo = RepositoryImpl(dao, scheduler)
-        val alarm = AlarmItem(isEnabled = true, hours = 12, minutes = 30)
-        runBlocking {
-            repo.addAlarm(alarm)
-            verify(scheduler, times(1)).schedule(dao.getLastUpdatedAlarm())
-            assertThat(repo.addAlarm(alarm)).isEqualTo(ScheduleResult.Success)
+    fun `add alarm success`() {
+        runTest {
+            assertThat(repository.addAlarm(alarmItem1)).isEqualTo(ScheduleResult.Success)
+        }
+    }
+
+    @Test
+    fun `add alarm error`() {
+        fakeScheduler.canScheduleAlarm = false
+        runTest {
+            assertThat(repository.addAlarm(alarmItem1)).isEqualTo(ScheduleResult.Error(fakeScheduler.exception))
         }
     }
 }
