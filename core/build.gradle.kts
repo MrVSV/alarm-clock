@@ -10,7 +10,7 @@ android {
     defaultConfig {
         minSdk = Config.minSdk
 
-        testInstrumentationRunner = Config.testInstrumentationRunner
+        testInstrumentationRunner = Config.defaultTestInstrumentationRunner
         consumerProguardFiles("consumer-rules.pro")
     }
 
@@ -39,5 +39,5 @@ dependencies {
 
     implementation(Dependencies.Koin.koin)
     implementation(Dependencies.Koin.koinAndroidxCompose)
-    testImplementation(Dependencies.Koin.koinTestJunit4)
+    testImplementation(Dependencies.Koin.koinTest)
 }

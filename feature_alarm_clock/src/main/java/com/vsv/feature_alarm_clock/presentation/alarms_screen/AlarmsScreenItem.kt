@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vsv.feature_alarm_clock.domain.model.AlarmItem
@@ -42,6 +43,7 @@ fun AlarmsScreenItem(
             .fillMaxWidth()
             .wrapContentHeight()
             .padding(horizontal = 8.dp)
+            .testTag("alarm_item")
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

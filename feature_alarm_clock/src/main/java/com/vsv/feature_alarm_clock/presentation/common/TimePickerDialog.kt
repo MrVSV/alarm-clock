@@ -20,6 +20,7 @@ import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.vsv.core.R
@@ -40,7 +41,8 @@ fun TimePickerDialog(
         is24Hour = state.is24HourFormat
     )
     DatePickerDialog(
-        modifier = Modifier,
+        modifier = Modifier
+            .testTag("picker"),
         onDismissRequest = { onEvent(AlarmScreenEvent.CloseTimePicker) },
         confirmButton = {}
     ) {
@@ -49,6 +51,7 @@ fun TimePickerDialog(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 32.dp)
+                .testTag("picker")
         ) {
             if (state.isDialTimePickerInputMode)
                 TimePicker(state = timePickerState)

@@ -24,7 +24,8 @@ object Dependencies {
     object Koin {
         const val koin = "io.insert-koin:koin-android:3.4.3"
         const val koinAndroidxCompose = "io.insert-koin:koin-androidx-compose:3.4.6"
-        const val koinTestJunit4 = "io.insert-koin:koin-test-junit4:3.4.3"
+        const val koinTest = "io.insert-koin:koin-test:3.4.3"
+        const val koinAndroidTest = "io.insert-koin:koin-android-test:3.4.3"
     }
 
     object Room {
@@ -33,6 +34,7 @@ object Dependencies {
     }
 
     object Test {
+        const val core = "androidx.test:core-ktx:1.5.0"
         const val junit = "junit:junit:4.13.2"
         const val androidTest = "androidx.test.ext:junit:1.1.5"
         const val espresso = "androidx.test.espresso:espresso-core:3.5.1"
@@ -40,6 +42,11 @@ object Dependencies {
         const val mockitoCore = "org.mockito:mockito-core:5.4.0"
         const val mockitoKotlin = "org.mockito.kotlin:mockito-kotlin:5.1.0"
         const val coroutinesTest = "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3"
+        const val robolectric = "org.robolectric:robolectric:4.9"
+        const val androidTestRules = "androidx.test:rules:1.5.0"
+        const val UiAutomator = "androidx.test.uiautomator:uiautomator:2.2.0"
+        const val testRunner = "androidx.test:runner:1.5.2"
+        const val orchestrator = "androidx.test:orchestrator:1.4.2"
     }
 
     object DataStore {

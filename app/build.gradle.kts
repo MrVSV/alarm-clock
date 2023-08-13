@@ -1,6 +1,8 @@
 plugins {
     id(Plugins.application)
     id(Plugins.android)
+    id(Plugins.ksp)
+
 }
 
 android {
@@ -14,9 +16,17 @@ android {
         versionCode = Config.versionCode
         versionName = Config.versionName
 
-        testInstrumentationRunner = Config.testInstrumentationRunner
+        testInstrumentationRunner = Config.koinTestInstrumentationRunner
+        testInstrumentationRunnerArguments.putAll(mapOf("clearPackageData" to "true"))
         vectorDrawables {
             useSupportLibrary = true
+        }
+    }
+
+    testOptions {
+        execution = "ANDROIDX_TEST_ORCHESTRATOR"
+        unitTests {
+            isIncludeAndroidResources = true
         }
     }
 
@@ -77,9 +87,22 @@ dependencies {
 
     implementation(Dependencies.Koin.koin)
     implementation(Dependencies.Koin.koinAndroidxCompose)
-    testImplementation(Dependencies.Koin.koinTestJunit4)
+    testImplementation(Dependencies.Koin.koinTest)
+    androidTestImplementation(Dependencies.Koin.koinAndroidTest)
 
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    implementation(Dependencies.Room.roomRuntime)
+    ksp(Dependencies.Room.roomCompiler)
+
+    implementation(Dependencies.DataStore.preferencesDataStore)
+
+    testImplementation(Dependencies.Test.junit)
+    testImplementation(Dependencies.Test.truth)
+    testImplementation(Dependencies.Test.coroutinesTest)
+    androidTestImplementation(Dependencies.Test.androidTest)
+    androidTestImplementation(Dependencies.Test.espresso)
+    androidTestImplementation(Dependencies.Test.truth)
+    androidTestImplementation(Dependencies.Test.testRunner)
+    androidTestImplementation(Dependencies.Test.androidTestRules)
+    androidTestUtil(Dependencies.Test.orchestrator)
+    androidTestImplementation(Dependencies.Test.UiAutomator)
 }

@@ -23,13 +23,11 @@ fun Navigation(
         composable(
             route = Destinations.AlarmsScreen.name
         ) {
-            val viewModel = koinViewModel<AlarmsScreenViewModel>()
-            val state = viewModel.state.collectAsState()
-            val onEvent = viewModel::onEvent
+            val viewModel: AlarmsScreenViewModel = koinViewModel()
             AlarmsScreen(
+                state = viewModel.state.collectAsState().value,
+                onEvent = viewModel::onEvent,
                 navController = navController,
-                state = state.value,
-                onEvent = onEvent
             )
         }
     }

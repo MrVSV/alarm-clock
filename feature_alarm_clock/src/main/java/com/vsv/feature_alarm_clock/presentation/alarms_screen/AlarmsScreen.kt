@@ -7,7 +7,6 @@ import android.text.format.DateFormat
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
@@ -46,7 +46,6 @@ import com.vsv.feature_alarm_clock.presentation.common.AlarmRationaleDialog
 import com.vsv.feature_alarm_clock.presentation.common.NotificationRationaleDialog
 import com.vsv.feature_alarm_clock.presentation.common.TimePickerDialog
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AlarmsScreen(
     state: AlarmsScreenState,
@@ -59,6 +58,7 @@ fun AlarmsScreen(
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranded ->
+            Log.d(TAG, "onResult: $isGranded")
             if (isGranded) onEvent(AlarmScreenEvent.ShowTimePicker(state.selectedAlarm))
             else {
                 if (context.findActivity()
@@ -110,7 +110,6 @@ fun AlarmsScreen(
         floatingActionButton = {
             LargeFloatingActionButton(
                 onClick = {
-                    Log.d(TAG, "AlarmsScreen: $state")
                     if (!state.isAlarmsEnable) {
                         onEvent(AlarmScreenEvent.ShowAlarmRationale)
                     } else if (!state.isNotificationEnable) {
@@ -120,7 +119,8 @@ fun AlarmsScreen(
                     } else {
                         onEvent(AlarmScreenEvent.ShowTimePicker(state.selectedAlarm))
                     }
-                }
+                },
+                modifier = Modifier.testTag("fab")
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
