@@ -7,7 +7,6 @@ import android.content.Intent
 import android.util.Log
 import com.vsv.core.data.AlarmScheduler.Companion.ALARM_ITEM_ID
 
-
 class AlarmReceiver: BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {

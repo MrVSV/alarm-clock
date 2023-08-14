@@ -17,35 +17,17 @@ import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import com.vsv.feature_alarm_clock.presentation.alarms_screen.AlarmsScreen
 import com.vsv.feature_alarm_clock.presentation.alarms_screen.AlarmsScreenViewModel
-import com.vsv.ruleyourtime.KoinTestRule
-import com.vsv.ruleyourtime.di.testAlarmModule
-import com.vsv.ruleyourtime.di.testDataBaseModule
-import com.vsv.ruleyourtime.di.testDataStoreModule
-import com.vsv.ruleyourtime.di.testRepositoryModule
-import com.vsv.ruleyourtime.di.testViewModelModule
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.koin.androidx.compose.koinViewModel
-import org.koin.test.KoinTest
 
 
-class AlarmsScreenTest : KoinTest {
+class AlarmsScreenTest{
 
     @get:Rule(order = 0)
     val permissionRule: GrantPermissionRule? =
         GrantPermissionRule.grant(android.Manifest.permission.POST_NOTIFICATIONS)
-
-    @get:Rule(order = 1)
-    val koinTestRule = KoinTestRule(
-        modules = listOf(
-            testDataStoreModule,
-            testRepositoryModule,
-            testViewModelModule,
-            testAlarmModule,
-            testDataBaseModule,
-        )
-    )
 
     @get:Rule(order = 2)
     val composeRule = createComposeRule()

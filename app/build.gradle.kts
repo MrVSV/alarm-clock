@@ -1,8 +1,6 @@
 plugins {
     id(Plugins.application)
     id(Plugins.android)
-    id(Plugins.ksp)
-
 }
 
 android {
@@ -16,7 +14,7 @@ android {
         versionCode = Config.versionCode
         versionName = Config.versionName
 
-        testInstrumentationRunner = Config.koinTestInstrumentationRunner
+        testInstrumentationRunner = Config.defaultTestInstrumentationRunner
         testInstrumentationRunnerArguments.putAll(mapOf("clearPackageData" to "true"))
         vectorDrawables {
             useSupportLibrary = true
@@ -25,9 +23,6 @@ android {
 
     testOptions {
         execution = "ANDROIDX_TEST_ORCHESTRATOR"
-        unitTests {
-            isIncludeAndroidResources = true
-        }
     }
 
     buildTypes {
@@ -89,11 +84,6 @@ dependencies {
     implementation(Dependencies.Koin.koinAndroidxCompose)
     testImplementation(Dependencies.Koin.koinTest)
     androidTestImplementation(Dependencies.Koin.koinAndroidTest)
-
-    implementation(Dependencies.Room.roomRuntime)
-    ksp(Dependencies.Room.roomCompiler)
-
-    implementation(Dependencies.DataStore.preferencesDataStore)
 
     testImplementation(Dependencies.Test.junit)
     testImplementation(Dependencies.Test.truth)

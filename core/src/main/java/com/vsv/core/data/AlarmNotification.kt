@@ -10,7 +10,6 @@ import android.text.format.DateFormat
 import android.util.Log
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import com.vsv.core.R
 import com.vsv.core.domain.AppNotification
 import java.text.SimpleDateFormat
@@ -23,11 +22,6 @@ class AlarmNotification(
     private fun convertAlarmTime(millis: Long): String {
         val pattern = if (DateFormat.is24HourFormat(context)) "HH:mm" else "HH:mm a"
         return SimpleDateFormat(pattern, Locale.getDefault()).format(millis)
-    }
-
-    override fun isNotificationEnabled(): Boolean {
-        val notificationManager = NotificationManagerCompat.from(context)
-        return notificationManager.areNotificationsEnabled()
     }
 
     override fun createNotificationChanel(): NotificationChannelCompat {
