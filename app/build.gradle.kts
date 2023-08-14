@@ -16,7 +16,7 @@ android {
         versionCode = Config.versionCode
         versionName = Config.versionName
 
-        testInstrumentationRunner = Config.koinTestInstrumentationRunner
+        testInstrumentationRunner = Config.defaultTestInstrumentationRunner
         testInstrumentationRunnerArguments.putAll(mapOf("clearPackageData" to "true"))
         vectorDrawables {
             useSupportLibrary = true
