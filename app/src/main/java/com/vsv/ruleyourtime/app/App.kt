@@ -6,8 +6,9 @@ import com.vsv.core.di.alarmModule
 import com.vsv.feature_alarm_clock.di.dataStoreModule
 import com.vsv.feature_alarm_clock.di.repositoryModule
 import com.vsv.feature_alarm_clock.di.viewModelModule
-import com.vsv.core.domain.AppNotification
 import com.vsv.local_data_base.di.dataBaseModule
+import com.vsv.ruleyourtime.di.notificationModule
+import com.vsv.ruleyourtime.notifications.AppNotification
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -25,7 +26,7 @@ class App : Application() {
         startKoin {
             androidLogger(level = Level.DEBUG)
             androidContext(androidContext = this@App)
-            modules(alarmModule, dataBaseModule, repositoryModule, viewModelModule, dataStoreModule)
+            modules(notificationModule, alarmModule, dataBaseModule, repositoryModule, viewModelModule, dataStoreModule)
         }
 
         val notificationManager = NotificationManagerCompat.from(applicationContext)

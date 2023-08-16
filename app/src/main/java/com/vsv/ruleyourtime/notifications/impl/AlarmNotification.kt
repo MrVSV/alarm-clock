@@ -1,17 +1,19 @@
-package com.vsv.core.data
+package com.vsv.ruleyourtime.notifications.impl
 
 import android.app.Notification
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.text.format.DateFormat
-import android.util.Log
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import com.vsv.core.R
-import com.vsv.core.domain.AppNotification
+import com.vsv.core.data.AlarmScheduler.Companion.ALARM_ITEM_ID
+import com.vsv.ruleyourtime.notifications.AppNotification
+import com.vsv.ruleyourtime.presentation.AlarmActivity
+import com.vsv.ruleyourtime.service.AlarmService
+import com.vsv.ruleyourtime.service.AlarmServiceCommands
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -25,7 +27,6 @@ class AlarmNotification(
     }
 
     override fun createNotificationChanel(): NotificationChannelCompat {
-        Log.d(TAG, "createNotificationChanel: alarm")
         return NotificationChannelCompat.Builder(
             AlARM_CHANNEL_ID,
             NotificationManager.IMPORTANCE_MAX
@@ -34,29 +35,11 @@ class AlarmNotification(
             .setSound(null, null)
             .setVibrationEnabled(true)
             .build()
-
     }
 
-    override fun getNotification(itemId: Int): Notification {
-        val activityIntent = Intent("com.vsv.app.alarmactivity")
-        val pendingIntent =
-            PendingIntent.getActivity(
-                context,
-                0,
-                activityIntent,
-                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-            )
-        val alarmServiceIntent = Intent(context, AlarmService::class.java).apply {
-            action = AlarmServiceCommands.STOP.toString()
-        }
-        val alarmSoundPendingIntent =
-            PendingIntent.getService(
-                context,
-                0,
-                alarmServiceIntent,
-                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-            )
-        val action = NotificationCompat.Action(null, "Stop", alarmSoundPendingIntent)
+    override fun createNotification(itemId: Int): Notification {
+
+        val action = NotificationCompat.Action(null, "Stop", setServicePendingIntent(itemId))
 
         return NotificationCompat.Builder(context,
             AlARM_CHANNEL_ID
@@ -65,11 +48,36 @@ class AlarmNotification(
             .setSmallIcon(R.drawable.baseline_alarm_on_24)
             .setContentTitle("Alarm Clock #$itemId")
 //            .setContentText("Time ${convertAlarmTime(item.alarmTimeMillis)}")
-            .setFullScreenIntent(pendingIntent, true)
+            .setFullScreenIntent(setActivityPendingIntent(itemId), true)
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setCategory(NotificationCompat.CATEGORY_ALARM)
             .addAction(action)
             .build()
+    }
+
+    private fun setServicePendingIntent(itemId: Int): PendingIntent? {
+        val alarmServiceIntent = Intent(context, AlarmService::class.java).apply {
+            action = AlarmServiceCommands.STOP.toString()
+            putExtra(ALARM_ITEM_ID, itemId)
+        }
+        return PendingIntent.getService(
+            context,
+            0,
+            alarmServiceIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+    }
+
+    private fun setActivityPendingIntent(itemId: Int): PendingIntent? {
+        val activityIntent = Intent(context, AlarmActivity::class.java).apply {
+            putExtra(ALARM_ITEM_ID, itemId)
+        }
+        return PendingIntent.getActivity(
+            context,
+            0,
+            activityIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
     }
 
     companion object {

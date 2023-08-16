@@ -57,8 +57,9 @@ class AlarmScheduler(
     }
 
     private fun setAlarmPendingIntent(item: Item): PendingIntent {
-        val alarmIntent = Intent(context, AlarmReceiver::class.java).also {
-            it.putExtra(ALARM_ITEM_ID, item.id)
+        val alarmIntent = Intent().apply {
+            setClassName(context, "com.vsv.ruleyourtime.receivers.AlarmReceiver")
+            putExtra(ALARM_ITEM_ID, item.id)
         }
         return PendingIntent.getBroadcast(
             context,

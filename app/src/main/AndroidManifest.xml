@@ -24,13 +24,9 @@
         android:theme="@style/Theme.RuleYourTime"
         tools:targetApi="31">
         <activity
-            android:name="com.vsv.feature_alarm_clock.presentation.AlarmActivity"
+            android:name=".presentation.AlarmActivity"
             android:exported="true"
             android:showOnLockScreen="true">
-            <intent-filter>
-                <action android:name="com.vsv.app.alarmactivity"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
         </activity>
         <activity
             android:name=".presentation.MainActivity"
@@ -40,16 +36,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
-                <action android:name="com.vsv.app.mainactivity"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="com.vsv.app.mainactivity" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
-        <receiver android:name="com.vsv.core.data.AlarmReceiver" />
-        <service android:name="com.vsv.core.data.AlarmService" />
+        <receiver android:name=".receivers.AlarmReceiver"/>
+        <service android:name=".service.AlarmService"/>
 
         <receiver
-            android:name="com.vsv.feature_alarm_clock.data.alarm_clock.receivers.BootCompletedReceiver"
+            android:name=".receivers.BootCompletedReceiver"
             android:directBootAware="true"
             android:exported="false">
             <intent-filter>
@@ -57,7 +53,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name="com.vsv.feature_alarm_clock.data.alarm_clock.receivers.AlarmPermissionStateChangingReceiver"
+            android:name=".receivers.AlarmPermissionStateChangingReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

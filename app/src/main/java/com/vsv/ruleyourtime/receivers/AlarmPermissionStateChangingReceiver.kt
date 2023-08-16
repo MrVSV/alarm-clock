@@ -1,4 +1,4 @@
-package com.vsv.feature_alarm_clock.data.alarm_clock.receivers
+package com.vsv.ruleyourtime.receivers
 
 import android.app.AlarmManager.ACTION_SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED
 import android.content.BroadcastReceiver

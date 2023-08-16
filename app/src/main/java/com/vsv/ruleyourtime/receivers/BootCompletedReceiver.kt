@@ -1,4 +1,4 @@
-package com.vsv.feature_alarm_clock.data.alarm_clock.receivers
+package com.vsv.ruleyourtime.receivers
 
 import android.content.BroadcastReceiver
 import android.content.Context

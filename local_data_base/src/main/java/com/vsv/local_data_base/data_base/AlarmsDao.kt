@@ -23,4 +23,7 @@ interface AlarmsDao {
 
     @Query("SELECT * FROM alarms WHERE isEnabled=1")
     fun getAlarmsForReschedule(): List<AlarmItemEntity>
+
+    @Query("SELECT * FROM alarms WHERE id=:id")
+    suspend fun getAlarmById(id: Int): AlarmItemEntity
 }
