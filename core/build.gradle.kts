@@ -37,6 +37,8 @@ dependencies {
     implementation(Dependencies.Core.core)
     implementation(platform(Dependencies.Core.kotlinBom))
 
+    implementation(Dependencies.DataStore.preferencesDataStore)
+
     implementation(Dependencies.Koin.koin)
     implementation(Dependencies.Koin.koinAndroidxCompose)
     testImplementation(Dependencies.Koin.koinTest)

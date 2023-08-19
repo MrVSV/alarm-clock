@@ -1,8 +1,7 @@
-package com.vsv.feature_alarm_clock.domain.repository
+package com.vsv.core.domain
 
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
-import com.vsv.feature_alarm_clock.domain.preferences.UserPreferences
 import kotlinx.coroutines.flow.Flow
 
 interface UserPreferencesRepository {

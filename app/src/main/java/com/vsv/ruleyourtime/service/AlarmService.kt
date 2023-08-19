@@ -5,10 +5,10 @@ import android.content.Intent
 import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
-import android.media.RingtoneManager
+import android.net.Uri
 import android.os.IBinder
 import com.vsv.core.data.AlarmScheduler.Companion.ALARM_ITEM_ID
-import com.vsv.local_data_base.data_base.AlarmsDao
+import com.vsv.feature_alarm_clock.domain.repository.Repository
 import com.vsv.ruleyourtime.notifications.AppNotification
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,7 +20,7 @@ import org.koin.core.qualifier.named
 class AlarmService : Service() {
 
     private val notification: AppNotification by inject(qualifier = named("alarmNotification"))
-    private val alarmsDao: AlarmsDao by inject()
+    private val repository: Repository by inject()
     private lateinit var mediaPlayer: MediaPlayer
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -33,17 +33,30 @@ class AlarmService : Service() {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        val itemId = intent.getIntExtra(ALARM_ITEM_ID, 0)
+        var itemId = intent.getIntExtra(ALARM_ITEM_ID, 0)
         var job: Job? = null
         startForeground(1, notification.createNotification(itemId))
         when (intent.action) {
-            AlarmServiceCommands.START.toString() -> mediaPlayer.start()
-            AlarmServiceCommands.STOP.toString() -> {
+            AlarmServiceCommands.START.toString() -> {
+                itemId = intent.getIntExtra(ALARM_ITEM_ID, 0)
                 job = CoroutineScope(Dispatchers.IO).launch {
-                    alarmsDao.addAlarm(
-                        alarmsDao.getAlarmById(intent.getIntExtra(ALARM_ITEM_ID, 0))
-                            .copy(isEnabled = false)
-                    )
+                    val alarm = repository.getAlarmById(itemId)
+                    job?.cancel()
+                    mediaPlayer.apply {
+                        setDataSource(
+                            this@AlarmService,
+                            Uri.parse(alarm.ringtoneUri)
+                        )
+                        prepare()
+                        start()
+                    }
+                }
+            }
+            AlarmServiceCommands.STOP.toString() -> {
+                itemId = intent.getIntExtra(ALARM_ITEM_ID, 0)
+                job = CoroutineScope(Dispatchers.IO).launch {
+                    val alarm = repository.getAlarmById(itemId)
+                    repository.updateAlarm(alarm.copy(isEnabled = false))
                     job?.cancel()
                 }
                 stopSelf()
@@ -65,13 +78,10 @@ class AlarmService : Service() {
             .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
             .build()
         mediaPlayer = MediaPlayer().apply {
-            setDataSource(
-                this@AlarmService,
-                RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
-            )
+
             setAudioAttributes(audioAttributes)
             isLooping = true
-            prepare()
+
         }
     }
 }

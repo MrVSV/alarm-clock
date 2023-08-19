@@ -4,12 +4,13 @@ import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.vsv.core.domain.RingtonePicker
 import com.vsv.core.domain.ScheduleResult
+import com.vsv.core.domain.UserPreferences
+import com.vsv.core.domain.UserPreferencesRepository
 import com.vsv.core.utils.Event
 import com.vsv.feature_alarm_clock.domain.model.AlarmItem
-import com.vsv.feature_alarm_clock.domain.preferences.UserPreferences
 import com.vsv.feature_alarm_clock.domain.repository.Repository
-import com.vsv.feature_alarm_clock.domain.repository.UserPreferencesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -21,6 +22,7 @@ import java.time.LocalTime
 class AlarmsScreenViewModel(
     private val repository: Repository,
     private val userPreferencesRepository: UserPreferencesRepository,
+    private val ringtonePicker: RingtonePicker,
 ) : ViewModel() {
 
     private val _alarms = repository.getAlarmList().stateIn(
@@ -71,7 +73,9 @@ class AlarmsScreenViewModel(
                     id = event.id,
                     hours = event.hours,
                     minutes = event.minutes,
-                    isEnabled = true
+                    isEnabled = true,
+                    ringtoneUri = ringtonePicker.getRingtone().uri,
+                    ringtoneTitle = ringtonePicker.getRingtone().title
                 )
                 viewModelScope.launch {
                     when (repository.addAlarm(alarmItem = alarmItem)) {
@@ -153,25 +157,13 @@ class AlarmsScreenViewModel(
                 }
             }
             is AlarmScreenEvent.DisableAlarm -> {
-                val alarmItem = AlarmItem(
-                    id = event.alarmItem.id,
-                    hours = event.alarmItem.hours,
-                    minutes = event.alarmItem.minutes,
-                    isEnabled = false,
-                )
                 viewModelScope.launch {
-                    repository.disableAlarm(alarmItem = alarmItem)
+                    repository.disableAlarm(alarmItem = event.alarmItem.copy(isEnabled = false))
                 }
             }
             is AlarmScreenEvent.EnableAlarm -> {
-                val alarmItem = AlarmItem(
-                    id = event.alarmItem.id,
-                    hours = event.alarmItem.hours,
-                    minutes = event.alarmItem.minutes,
-                    isEnabled = true,
-                )
                 viewModelScope.launch {
-                    repository.addAlarm(alarmItem = alarmItem)
+                    repository.addAlarm(alarmItem = event.alarmItem.copy(isEnabled = true))
                 }
             }
         }

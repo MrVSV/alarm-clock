@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import com.vsv.core_ui.theme.RuleYourTimeTheme
-import com.vsv.ruleyourtime.presentation.navigation.Navigation
+import com.vsv.ruleyourtime.presentation.navigation.NavGraph
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,6 +21,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun RuleYourTimeApp(
 ){
-    Navigation()
+    NavGraph()
 }
 

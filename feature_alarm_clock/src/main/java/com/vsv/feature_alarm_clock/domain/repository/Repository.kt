@@ -8,6 +8,10 @@ interface Repository {
 
     suspend fun addAlarm(alarmItem: AlarmItem): ScheduleResult
 
+    suspend fun updateAlarm(alarmItem: AlarmItem)
+
+    suspend fun getAlarmById(alarmItemId: Int): AlarmItem
+
     fun getAlarmList(): Flow<List<AlarmItem>>
 
     fun resetAllAlarms()

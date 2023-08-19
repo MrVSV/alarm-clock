@@ -8,9 +8,10 @@ import com.vsv.core.domain.Item
 data class AlarmItemEntity(
     @PrimaryKey(autoGenerate = true)
     override val id: Int = 0,
-//    val alarmTimeMillis: Long,
     val isEnabled: Boolean,
     override val hours: Int,
     override val minutes: Int,
-    val timeStamp: Long = System.currentTimeMillis()
+    val timeStamp: Long = System.currentTimeMillis(),
+    val ringtoneTitle: String,
+    val ringtoneUri: String
 ): Item

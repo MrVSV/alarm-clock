@@ -7,7 +7,9 @@ data class AlarmItem(
     val id: Int = 0,
     val isEnabled: Boolean,
     val hours: Int,
-    val minutes: Int
+    val minutes: Int,
+    val ringtoneTitle: String = "",
+    val ringtoneUri: String = "",
 ) {
 
     fun toEntity() = AlarmItemEntity(
@@ -15,7 +17,9 @@ data class AlarmItem(
         isEnabled = isEnabled,
         hours = hours,
         minutes = minutes,
-        )
+        ringtoneTitle = ringtoneTitle,
+        ringtoneUri = ringtoneUri,
+    )
 }
 
 fun AlarmItemEntity.toModel(): AlarmItem = AlarmItem(
@@ -23,4 +27,6 @@ fun AlarmItemEntity.toModel(): AlarmItem = AlarmItem(
     isEnabled = isEnabled,
     hours = hours,
     minutes = minutes,
+    ringtoneTitle = ringtoneTitle,
+    ringtoneUri = ringtoneUri,
 )

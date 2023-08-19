@@ -56,19 +56,18 @@ fun AlarmsScreen(
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission(),
-        onResult = { isGranded ->
-            Log.d(TAG, "onResult: $isGranded")
-            if (isGranded) onEvent(AlarmScreenEvent.ShowTimePicker(state.selectedAlarm))
-            else {
-                if (context.findActivity()
-                        .shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)
-                ) {
-                    onEvent(AlarmScreenEvent.ShowNotificationRationale)
-                }
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranded ->
+        Log.d(TAG, "onResult: $isGranded")
+        if (isGranded) onEvent(AlarmScreenEvent.ShowTimePicker(state.selectedAlarm))
+        else {
+            if (context.findActivity()
+                    .shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)
+            ) {
+                onEvent(AlarmScreenEvent.ShowNotificationRationale)
             }
         }
-    )
+    }
 
     DisposableEffect(key1 = lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
@@ -189,6 +188,7 @@ fun AlarmsScreen(
                         alarm = alarm,
                         state = state,
                         onEvent = onEvent,
+                        navController = navController
                     )
                 }
             }
