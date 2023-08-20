@@ -6,17 +6,26 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -33,6 +42,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavController
 import com.vsv.core.domain.MyRingtone
 
@@ -44,16 +56,17 @@ fun RingtonePickerScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
 ) {
-    Log.d(TAG, "RingtonePickerScreen: ${state.defaultRingtone}")
     val ringtonesList by remember {
         derivedStateOf { state.ringtonesList }
     }
     var pickedRingtone by remember {
         mutableStateOf(state.defaultRingtone)
     }
-    val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
-    val mediaPlayer = MediaPlayer()
+    val context = LocalContext.current
+    val mediaPlayer by remember {
+        mutableStateOf(MediaPlayer())
+    }
     val audioAttributes = AudioAttributes.Builder(
     )
         .setUsage(AudioAttributes.USAGE_ALARM)
@@ -76,74 +89,108 @@ fun RingtonePickerScreen(
         }
     }
 
-    DisposableEffect(key1 = Unit){
-
+    DisposableEffect(key1 = lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_PAUSE) {
+                mediaPlayer.stop()
+            }
+            if (event == Lifecycle.Event.ON_DESTROY) {
+                mediaPlayer.release()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
         onDispose {
-            mediaPlayer.stop()
-            mediaPlayer.release()
-
-//            lifecycleOwner.lifecycle.removeObserver(observer)
+            lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
-
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = { uri ->
+            Log.d(
+                TAG,
+                "RingtonePickerScreen: ${
+                    uri?.lastPathSegment?.dropWhile { it != '/' }?.dropWhile { it == '/' }
+                }"
+            )
+        }
+    )
     Scaffold(
+        floatingActionButton = {
+            Button(
+                onClick = {
+                    onEvent(
+                        RingtonePickerScreenEvent.SetRingtone(
+                            alarmItemId,
+                            (pickedRingtone as MyRingtone)
+                        )
+                    )
+                    navController.navigateUp()
+                },
+                modifier = Modifier
+            ) {
+                Text(text = "Save", fontSize = 18.sp)
+            }
+        },
         modifier = modifier.fillMaxSize()
     ) { paddingValues ->
-        Column(
-            modifier = Modifier.fillMaxSize(),
+        LazyColumn(
+            contentPadding = paddingValues,
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+                .selectableGroup()
         ) {
-            LazyColumn(
-                contentPadding = paddingValues,
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-                modifier = Modifier
-                    .padding(16.dp)
-                    .weight(1f)
-                    .selectableGroup()
-            ) {
-                items(items = ringtonesList) { ringtone ->
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
+            item {
+                Text(text = "Your ringtones")
+            }
+            item {
+                IconButton(
+                    onClick = { launcher.launch("audio/*") },
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "add alarm",
+                        tint = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .selectable(
-                                selected = ringtone.uri == pickedRingtone?.uri,
-                                onClick = {
-                                    pickedRingtone = ringtone
-                                    playRingtone(ringtone)
-                                },
-                                role = Role.RadioButton
-                            )
-                    ) {
-                        RadioButton(
-                            selected = ringtone.uri == pickedRingtone?.uri,
-                            onClick = null,
-                        )
-                        Text(text = ringtone.title)
-                    }
+                            .size(48.dp)
+                            .background(MaterialTheme.colorScheme.primary)
+                    )
                 }
             }
-            Row(
-                horizontalArrangement = Arrangement.End,
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth()
-            ) {
-                Button(
-                    onClick = {
-                        onEvent(
-                            RingtonePickerScreenEvent.SetRingtone(
-                                alarmItemId,
-                                (pickedRingtone as MyRingtone)
-                            )
+            item {
+                Text(text = "Device ringtones")
+            }
+            items(items = ringtonesList) { ringtone ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp)
+                        .selectable(
+                            selected = ringtone.uri == pickedRingtone?.uri,
+                            onClick = {
+                                pickedRingtone = ringtone
+                                playRingtone(pickedRingtone as MyRingtone)
+                            },
+                            role = Role.RadioButton
                         )
-                        navController.navigateUp()
-                    }
                 ) {
-                    Text(text = "SAVE")
+                    RadioButton(
+                        selected = ringtone.uri == pickedRingtone?.uri,
+                        onClick = null,
+                    )
+                    Text(
+                        text = ringtone.title,
+                        fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                        modifier = Modifier
+                            .padding(start = 16.dp)
+                    )
                 }
             }
         }
     }
 }
+
 
 

@@ -40,6 +40,11 @@ fun AlarmsScreenItem(
         String.format("%02d", alarm.hours) + ":" + String.format("%02d", alarm.minutes),
         DateTimeFormatter.ofPattern("HH:mm")
     )
+//    val context = LocalContext.current
+//    if (context.findActivity().intent.action == RingtoneManager.ACTION_RINGTONE_PICKER) {
+//                navController.navigate(Destination.RingtonePickerScreen.route + "/${alarm.id}")
+//
+//    }
     Card(
         onClick = { },
         modifier = Modifier
@@ -72,6 +77,15 @@ fun AlarmsScreenItem(
         }
         TextButton(
             onClick = {
+//                Intent(RingtoneManager.ACTION_RINGTONE_PICKER).apply {
+//                    putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, alarm.ringtoneUri)
+//                    putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, true)
+//                    putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true)
+//                    putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "select ringtone")
+//                    putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALL)
+//                }.also {
+//                   context.startActivity(it)
+//                }
                 navController.navigate(Destination.RingtonePickerScreen.route + "/${alarm.id}")
             },
             modifier.padding(start = 16.dp)
@@ -82,6 +96,7 @@ fun AlarmsScreenItem(
             imageVector = Icons.Default.Delete,
             contentDescription = "delete alarm",
             modifier = Modifier
+                .padding(16.dp)
                 .clickable(
                     enabled = true,
                     onClick = { onEvent(AlarmScreenEvent.DeleteAlarm(alarmItem = alarm)) }
