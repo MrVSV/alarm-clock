@@ -15,4 +15,5 @@ val dataBaseModule = module {
     }
 
     single { get<AlarmsDataBase>().alarmsDao() }
+    single { get<AlarmsDataBase>().userRingtoneDao() }
 }

@@ -4,13 +4,14 @@ import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vsv.core.domain.RingtonePicker
-import com.vsv.core.domain.ScheduleResult
-import com.vsv.core.domain.UserPreferences
-import com.vsv.core.domain.UserPreferencesRepository
+import com.vsv.core.domain.permission_state.RationaleState
+import com.vsv.core.domain.permission_state.RationaleStateRepository
+import com.vsv.core.domain.ringtone.RingtonePicker
+import com.vsv.core.domain.scheduler.ScheduleResult
+import com.vsv.core.domain.use_cases.RationaleStateUseCases
 import com.vsv.core.utils.Event
 import com.vsv.feature_alarm_clock.domain.model.AlarmItem
-import com.vsv.feature_alarm_clock.domain.repository.Repository
+import com.vsv.feature_alarm_clock.domain.use_case.AlarmUseCases
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -20,26 +21,26 @@ import kotlinx.coroutines.launch
 import java.time.LocalTime
 
 class AlarmsScreenViewModel(
-    private val repository: Repository,
-    private val userPreferencesRepository: UserPreferencesRepository,
+    private val alarmUseCases: AlarmUseCases,
+    private val rationaleStateUseCases: RationaleStateUseCases,
     private val ringtonePicker: RingtonePicker,
 ) : ViewModel() {
 
-    private val _alarms = repository.getAlarmList().stateIn(
+    private val _alarms = alarmUseCases.getAlarmsListUseCase().stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(),
         initialValue = emptyList()
     )
 
-    private val _userPreferences = userPreferencesRepository.getFromPreferences().stateIn(
+    private val _rationaleState = rationaleStateUseCases.getRationaleStatesUseCase().stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(),
-        initialValue = UserPreferences()
+        initialValue = RationaleState()
     )
 
     private val _state = MutableStateFlow(AlarmsScreenState())
     val state =
-        combine(_state, _alarms, _userPreferences) { state, alarms, prefs ->
+        combine(_state, _alarms, _rationaleState) { state, alarms, prefs ->
             state.copy(
                 alarms = alarms,
                 hours = if (LocalTime.now().hour < 23) LocalTime.now().hour + 1 else 0,
@@ -69,16 +70,16 @@ class AlarmsScreenViewModel(
                 }
             }
             is AlarmScreenEvent.SetAlarmTime -> {
-                val alarmItem = AlarmItem(
-                    id = event.id,
-                    hours = event.hours,
-                    minutes = event.minutes,
-                    isEnabled = true,
-                    ringtoneUri = ringtonePicker.getRingtone().uri,
-                    ringtoneTitle = ringtonePicker.getRingtone().title
-                )
                 viewModelScope.launch {
-                    when (repository.addAlarm(alarmItem = alarmItem)) {
+                    val alarmItem = AlarmItem(
+                        id = event.id,
+                        hours = event.hours,
+                        minutes = event.minutes,
+                        isEnabled = true,
+                        ringtoneUri = ringtonePicker.getRingtone().uri,
+                        ringtoneTitle = ringtonePicker.getRingtone().title
+                    )
+                    when (alarmUseCases.scheduleAlarmUseCase(alarmItem = alarmItem)) {
                         ScheduleResult.Success -> {
                             _state.update {
                                 it.copy(isAddingAlarm = false, selectedAlarm = null)
@@ -95,7 +96,7 @@ class AlarmsScreenViewModel(
             }
             is AlarmScreenEvent.DeleteAlarm -> {
                 viewModelScope.launch {
-                    repository.deleteAlarm(alarmItem = event.alarmItem)
+                    alarmUseCases.deleteAlarmUseCase(alarmItem = event.alarmItem)
                 }
             }
             AlarmScreenEvent.OnSnackbarClose -> {
@@ -105,8 +106,8 @@ class AlarmsScreenViewModel(
             }
             AlarmScreenEvent.CloseAlarmRationale -> {
                 viewModelScope.launch {
-                    userPreferencesRepository.saveToPreferences(
-                        UserPreferencesRepository.IS_ALARM_RATIONALE_SHOWN,
+                    rationaleStateUseCases.saveRationaleStatesUseCase(
+                        RationaleStateRepository.IS_ALARM_RATIONALE_SHOWN,
                         true
                     )
                 }
@@ -127,8 +128,8 @@ class AlarmsScreenViewModel(
             }
             AlarmScreenEvent.CloseNotificationRationale -> {
                 viewModelScope.launch {
-                    userPreferencesRepository.saveToPreferences(
-                        UserPreferencesRepository.IS_NOTIFICATION_RATIONALE_SHOWN,
+                    rationaleStateUseCases.saveRationaleStatesUseCase(
+                        RationaleStateRepository.IS_NOTIFICATION_RATIONALE_SHOWN,
                         true
                     )
                 }
@@ -158,12 +159,12 @@ class AlarmsScreenViewModel(
             }
             is AlarmScreenEvent.DisableAlarm -> {
                 viewModelScope.launch {
-                    repository.disableAlarm(alarmItem = event.alarmItem.copy(isEnabled = false))
+                    alarmUseCases.disableAlarmUseCase(alarmItem = event.alarmItem)
                 }
             }
             is AlarmScreenEvent.EnableAlarm -> {
                 viewModelScope.launch {
-                    repository.addAlarm(alarmItem = event.alarmItem.copy(isEnabled = true))
+                    alarmUseCases.enableAlarmUseCase(alarmItem = event.alarmItem)
                 }
             }
         }

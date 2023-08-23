@@ -9,8 +9,8 @@ val viewModelModule = module {
 
     viewModel {
         AlarmsScreenViewModel(
-            repository = get(),
-            userPreferencesRepository = get(),
+            alarmUseCases = get(),
+            rationaleStateUseCases = get(),
             ringtonePicker = get()
 
         )
@@ -18,8 +18,8 @@ val viewModelModule = module {
 
     viewModel {
         RingtonePickerScreenViewModel(
-            repository = get(),
-            ringtonePicker = get()
+            alarmUseCases = get(),
+            ringtoneUseCases = get()
         )
     }
 }

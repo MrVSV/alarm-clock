@@ -1,12 +1,13 @@
 package com.vsv.feature_alarm_clock.domain.repository
 
-import com.vsv.core.domain.ScheduleResult
+import com.vsv.core.domain.ringtone.MyRingtone
+import com.vsv.core.domain.scheduler.ScheduleResult
 import com.vsv.feature_alarm_clock.domain.model.AlarmItem
 import kotlinx.coroutines.flow.Flow
 
 interface Repository {
 
-    suspend fun addAlarm(alarmItem: AlarmItem): ScheduleResult
+    suspend fun scheduleAlarm(alarmItem: AlarmItem): ScheduleResult
 
     suspend fun updateAlarm(alarmItem: AlarmItem)
 
@@ -19,5 +20,13 @@ interface Repository {
     suspend fun deleteAlarm(alarmItem: AlarmItem)
 
     suspend fun disableAlarm(alarmItem: AlarmItem)
+
+    suspend fun setRingtone(alarmItemId: Int, myRingtone: MyRingtone)
+
+    suspend fun getRingtone(): MyRingtone
+
+    suspend fun getRingtonesList(): List<MyRingtone>
+
+    suspend fun addUserRingtone(myRingtone: MyRingtone)
 
 }

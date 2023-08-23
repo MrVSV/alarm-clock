@@ -3,7 +3,6 @@ package com.vsv.local_data_base.data_base
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
-import androidx.room.Update
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
@@ -11,10 +10,10 @@ import kotlinx.coroutines.flow.Flow
 interface AlarmsDao {
 
     @Upsert
-    suspend fun addAlarm(alarmItemEntity: AlarmItemEntity)
+    suspend fun upsertAlarm(alarmItemEntity: AlarmItemEntity)
 
-    @Update
-    suspend fun updateAlarm(alarmItemEntity: AlarmItemEntity)
+//    @Update
+//    suspend fun updateAlarm(alarmItemEntity: AlarmItemEntity)
 
     @Delete
     suspend fun deleteAlarm(alarmItemEntity: AlarmItemEntity)

@@ -3,8 +3,7 @@ package com.vsv.ruleyourtime.app
 import android.app.Application
 import androidx.core.app.NotificationManagerCompat
 import com.vsv.core.di.coreModule
-import com.vsv.feature_alarm_clock.di.repositoryModule
-import com.vsv.feature_alarm_clock.di.viewModelModule
+import com.vsv.feature_alarm_clock.di.alarmClockFeatureModule
 import com.vsv.local_data_base.di.dataBaseModule
 import com.vsv.ruleyourtime.di.notificationModule
 import com.vsv.ruleyourtime.notifications.AppNotification
@@ -25,7 +24,7 @@ class App : Application() {
         startKoin {
             androidLogger(level = Level.DEBUG)
             androidContext(androidContext = this@App)
-            modules(notificationModule, coreModule, dataBaseModule, repositoryModule, viewModelModule)
+            modules(notificationModule, coreModule, dataBaseModule, alarmClockFeatureModule)
         }
 
         val notificationManager = NotificationManagerCompat.from(applicationContext)

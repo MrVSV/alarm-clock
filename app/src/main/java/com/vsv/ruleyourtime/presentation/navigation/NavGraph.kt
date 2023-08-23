@@ -9,11 +9,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.vsv.core.utils.Destination
+import com.vsv.core.domain.navigation.Destination
 import com.vsv.feature_alarm_clock.presentation.alarms_screen.AlarmsScreen
 import com.vsv.feature_alarm_clock.presentation.alarms_screen.AlarmsScreenViewModel
 import com.vsv.feature_alarm_clock.presentation.ringtone_picker_screen.RingtonePickerScreen
-import com.vsv.feature_alarm_clock.presentation.ringtone_picker_screen.RingtonePickerScreenViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -44,11 +43,8 @@ fun NavGraph(
                 }
             )
         ) {
-            val viewModel: RingtonePickerScreenViewModel = koinViewModel()
             RingtonePickerScreen(
                 alarmItemId = it.arguments?.getInt("alarmId") ?: 0,
-                state = viewModel.state.collectAsState().value,
-                onEvent = viewModel::onEvent,
                 navController = navController,
             )
         }

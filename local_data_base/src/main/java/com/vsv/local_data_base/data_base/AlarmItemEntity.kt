@@ -2,7 +2,7 @@ package com.vsv.local_data_base.data_base
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.vsv.core.domain.Item
+import com.vsv.core.domain.model.Item
 
 @Entity(tableName = "alarms")
 data class AlarmItemEntity(

@@ -36,12 +36,12 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavController
+import com.vsv.core.domain.permission_state.checkAlarmPermissionState
+import com.vsv.core.domain.permission_state.checkNotificationPermissionState
 import com.vsv.core.extensions.findActivity
 import com.vsv.core.extensions.openAlarmPermissionSettings
 import com.vsv.core.extensions.openNotificationPermissionSettings
 import com.vsv.core.utils.Event
-import com.vsv.core.utils.checkAlarmPermissionState
-import com.vsv.core.utils.checkNotificationPermissionState
 import com.vsv.feature_alarm_clock.presentation.common.AlarmRationaleDialog
 import com.vsv.feature_alarm_clock.presentation.common.NotificationRationaleDialog
 import com.vsv.feature_alarm_clock.presentation.common.TimePickerDialog

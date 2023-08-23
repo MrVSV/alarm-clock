@@ -20,7 +20,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.vsv.core.utils.Destination
+import com.vsv.core.domain.navigation.Destination
 import com.vsv.feature_alarm_clock.domain.model.AlarmItem
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter

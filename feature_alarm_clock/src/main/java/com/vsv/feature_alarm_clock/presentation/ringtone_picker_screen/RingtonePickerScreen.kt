@@ -3,6 +3,7 @@ package com.vsv.feature_alarm_clock.presentation.ringtone_picker_screen
 import android.content.ContentValues.TAG
 import android.media.AudioAttributes
 import android.media.AudioManager
+import android.media.MediaMetadataRetriever
 import android.media.MediaPlayer
 import android.net.Uri
 import android.util.Log
@@ -45,25 +46,33 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.vsv.core.domain.MyRingtone
+import com.vsv.core.domain.ringtone.MyRingtone
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun RingtonePickerScreen(
     alarmItemId: Int,
-    state: RingtonePickerScreenState,
-    onEvent: (RingtonePickerScreenEvent) -> Unit,
-    navController: NavController,
     modifier: Modifier = Modifier,
+    viewModel: RingtonePickerScreenViewModel = koinViewModel(),
+    navController: NavController,
 ) {
-    val ringtonesList by remember {
-        derivedStateOf { state.ringtonesList }
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    val ringtones by viewModel.ringtonesList.collectAsStateWithLifecycle()
+    val deviceRingtones by remember {
+        derivedStateOf { ringtones.filter { !it.isUserRingtone }}
+    }
+    val userRingtones by remember {
+        derivedStateOf { ringtones.filter { it.isUserRingtone }}
     }
     var pickedRingtone by remember {
         mutableStateOf(state.defaultRingtone)
     }
+    val onEvent = viewModel::onEvent
     val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
+    /**вынести в отдельный класс*/
     val mediaPlayer by remember {
         mutableStateOf(MediaPlayer())
     }
@@ -103,15 +112,20 @@ fun RingtonePickerScreen(
             lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
+    /**сделать красиво*/
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
         onResult = { uri ->
-            Log.d(
-                TAG,
-                "RingtonePickerScreen: ${
-                    uri?.lastPathSegment?.dropWhile { it != '/' }?.dropWhile { it == '/' }
-                }"
-            )
+            if (uri != null) {
+                val r = MediaMetadataRetriever()
+                r.setDataSource(context, uri)
+                val ringtone = MyRingtone(
+                    uri = uri.toString(),
+                    title = r.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE) ?: "unnamed",
+                    isUserRingtone = true
+                )
+                onEvent(RingtonePickerScreenEvent.AddUserRingtone(ringtone))
+            }
         }
     )
     Scaffold(
@@ -158,10 +172,37 @@ fun RingtonePickerScreen(
                     )
                 }
             }
+            items(items = userRingtones){  ringtone ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp)
+                        .selectable(
+                            selected = ringtone.uri == pickedRingtone?.uri,
+                            onClick = {
+                                pickedRingtone = ringtone
+                                playRingtone(pickedRingtone as MyRingtone)
+                            },
+                            role = Role.RadioButton
+                        )
+                ) {
+                    RadioButton(
+                        selected = ringtone.uri == pickedRingtone?.uri,
+                        onClick = null,
+                    )
+                    Text(
+                        text = ringtone.title,
+                        fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                        modifier = Modifier
+                            .padding(start = 16.dp)
+                    )
+                }
+            }
             item {
                 Text(text = "Device ringtones")
             }
-            items(items = ringtonesList) { ringtone ->
+            items(items = deviceRingtones) { ringtone ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier

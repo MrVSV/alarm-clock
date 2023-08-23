@@ -7,9 +7,9 @@ import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import com.vsv.core.domain.Item
-import com.vsv.core.domain.ScheduleResult
-import com.vsv.core.domain.Scheduler
+import com.vsv.core.domain.model.Item
+import com.vsv.core.domain.scheduler.ScheduleResult
+import com.vsv.core.domain.scheduler.Scheduler
 import com.vsv.core.utils.MyCalendar
 
 class AlarmScheduler(

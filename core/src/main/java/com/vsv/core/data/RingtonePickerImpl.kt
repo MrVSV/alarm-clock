@@ -2,12 +2,8 @@ package com.vsv.core.data
 
 import android.content.Context
 import android.media.RingtoneManager
-import com.vsv.core.domain.MyRingtone
-import com.vsv.core.domain.RingtonePicker
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import com.vsv.core.domain.ringtone.MyRingtone
+import com.vsv.core.domain.ringtone.RingtonePicker
 
 class RingtonePickerImpl(
     private val context: Context,
@@ -45,33 +41,28 @@ class RingtonePickerImpl(
         }.apply()
     }
 
-    override fun setRingtone(myRingtone: MyRingtone) {
+    override suspend fun setRingtone(myRingtone: MyRingtone) {
         prefs.edit().run {
             putString("ringtone_title", myRingtone.title)
             putString("ringtone_uri", myRingtone.uri)
         }.apply()
     }
 
-    override fun getRingtone(): MyRingtone {
+    override suspend fun getRingtone(): MyRingtone {
         return MyRingtone(
             title = prefs.getString("ringtone_title", "") ?: "",
             uri = prefs.getString("ringtone_uri", "") ?: ""
         )
     }
 
-    override fun getRingtonesList(): List<MyRingtone> {
-        var job: Job? = null
+    override suspend fun getRingtonesList(): List<MyRingtone> {
         val ringtoneList = mutableListOf<MyRingtone>()
-        var rmCursor = ringtoneManager.cursor
-        job = CoroutineScope(Dispatchers.IO).launch {
-            while (rmCursor.moveToNext()) {
-                val id = rmCursor.getInt(RingtoneManager.ID_COLUMN_INDEX)
-                val uri = rmCursor.getString(RingtoneManager.URI_COLUMN_INDEX)
-                val title = rmCursor.getString(RingtoneManager.TITLE_COLUMN_INDEX)
-                ringtoneList += (MyRingtone(title = title, uri = "$uri/$id"))
-            }
-            job?.cancel()
-            rmCursor = null
+        val rmCursor = ringtoneManager.cursor
+        while (rmCursor.moveToNext()) {
+            val id = rmCursor.getInt(RingtoneManager.ID_COLUMN_INDEX)
+            val uri = rmCursor.getString(RingtoneManager.URI_COLUMN_INDEX)
+            val title = rmCursor.getString(RingtoneManager.TITLE_COLUMN_INDEX)
+            ringtoneList += (MyRingtone(title = title, uri = "$uri/$id"))
         }
         return ringtoneList
     }

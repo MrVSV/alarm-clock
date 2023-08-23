@@ -6,7 +6,7 @@ object Dependencies {
     }
 
     object Compose {
-        const val lifecycle = "androidx.lifecycle:lifecycle-runtime-ktx:2.6.1"
+        const val lifecycle = "androidx.lifecycle:lifecycle-runtime-compose:2.6.1"
         const val lifecycleViewModel = "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1"
         const val activity = "androidx.activity:activity-compose:1.7.2"
         const val navigation = "androidx.navigation:navigation-compose:2.6.0"
