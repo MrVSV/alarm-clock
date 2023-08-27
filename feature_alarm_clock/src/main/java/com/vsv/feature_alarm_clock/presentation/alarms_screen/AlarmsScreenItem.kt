@@ -88,9 +88,9 @@ fun AlarmsScreenItem(
 //                }
                 navController.navigate(Destination.RingtonePickerScreen.route + "/${alarm.id}")
             },
-            modifier.padding(start = 16.dp)
+            Modifier.padding(start = 16.dp)
         ) {
-            Text(text = alarm.ringtoneTitle)
+            Text(text = alarm.ringtone.title)
         }
         Icon(
             imageVector = Icons.Default.Delete,

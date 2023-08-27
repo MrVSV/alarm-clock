@@ -3,13 +3,13 @@ package com.vsv.feature_alarm_clock.presentation.ringtone_picker_screen
 import android.content.ContentValues.TAG
 import android.media.AudioAttributes
 import android.media.AudioManager
-import android.media.MediaMetadataRetriever
 import android.media.MediaPlayer
 import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,6 +23,7 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -50,6 +51,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.vsv.core.domain.ringtone.MyRingtone
 import org.koin.androidx.compose.koinViewModel
+import java.io.File
 
 @Composable
 fun RingtonePickerScreen(
@@ -59,19 +61,17 @@ fun RingtonePickerScreen(
     navController: NavController,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val ringtones by viewModel.ringtonesList.collectAsStateWithLifecycle()
+    val onEvent = viewModel::onEvent
+    onEvent(RingtonePickerScreenEvent.GetAlarmById(alarmItemId))
     val deviceRingtones by remember {
-        derivedStateOf { ringtones.filter { !it.isUserRingtone }}
+        derivedStateOf { state.ringtoneList.filter { !it.isUserRingtone } }
     }
     val userRingtones by remember {
-        derivedStateOf { ringtones.filter { it.isUserRingtone }}
+        derivedStateOf { state.ringtoneList.filter { it.isUserRingtone } }
     }
-    var pickedRingtone by remember {
-        mutableStateOf(state.defaultRingtone)
-    }
-    val onEvent = viewModel::onEvent
     val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
+
     /**вынести в отдельный класс*/
     val mediaPlayer by remember {
         mutableStateOf(MediaPlayer())
@@ -84,8 +84,10 @@ fun RingtonePickerScreen(
         .build()
 
     fun playRingtone(ringtone: MyRingtone) {
+
         try {
             mediaPlayer.apply {
+                Log.d(TAG, "playRingtone: ${Uri.parse(ringtone.uri)}")
                 reset()
                 setDataSource(context, Uri.parse(ringtone.uri))
                 setAudioAttributes(audioAttributes)
@@ -95,6 +97,7 @@ fun RingtonePickerScreen(
             }
         } catch (e: Exception) {
             Log.d(TAG, "playRingtone: ${e.message}")
+            Log.d(TAG, "playRingtone: ${File(ringtone.uri).exists()}")
         }
     }
 
@@ -112,121 +115,131 @@ fun RingtonePickerScreen(
             lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
+
     /**сделать красиво*/
     val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent(),
-        onResult = { uri ->
-            if (uri != null) {
-                val r = MediaMetadataRetriever()
-                r.setDataSource(context, uri)
-                val ringtone = MyRingtone(
-                    uri = uri.toString(),
-                    title = r.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE) ?: "unnamed",
-                    isUserRingtone = true
-                )
-                onEvent(RingtonePickerScreenEvent.AddUserRingtone(ringtone))
-            }
+        contract = ActivityResultContracts.GetContent()
+    ) { uri ->
+        if (uri != null) {
+            onEvent(RingtonePickerScreenEvent.AddUserRingtone(uri))
         }
-    )
-    Scaffold(
-        floatingActionButton = {
-            Button(
-                onClick = {
-                    onEvent(
-                        RingtonePickerScreenEvent.SetRingtone(
-                            alarmItemId,
-                            (pickedRingtone as MyRingtone)
+    }
+    if (state.hasItemBeenReceived) {
+        var pickedRingtone by remember {
+            mutableStateOf(state.alarmItem.ringtone)
+        }
+        Scaffold(
+            floatingActionButton = {
+                Button(
+                    onClick = {
+                        onEvent(
+                            RingtonePickerScreenEvent.SetRingtone(
+                                state.alarmItem,
+                                pickedRingtone
+                            )
                         )
-                    )
-                    navController.navigateUp()
-                },
+                        navController.navigateUp()
+                    },
+                    modifier = Modifier
+                ) {
+                    Text(text = "Save", fontSize = 18.sp)
+                }
+            },
+            modifier = modifier.fillMaxSize()
+        ) { paddingValues ->
+            LazyColumn(
+                contentPadding = paddingValues,
+                verticalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+                    .selectableGroup()
             ) {
-                Text(text = "Save", fontSize = 18.sp)
-            }
-        },
-        modifier = modifier.fillMaxSize()
-    ) { paddingValues ->
-        LazyColumn(
-            contentPadding = paddingValues,
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-                .selectableGroup()
-        ) {
-            item {
-                Text(text = "Your ringtones")
-            }
-            item {
-                IconButton(
-                    onClick = { launcher.launch("audio/*") },
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "add alarm",
-                        tint = MaterialTheme.colorScheme.onPrimary,
-                        modifier = Modifier
-                            .size(48.dp)
-                            .background(MaterialTheme.colorScheme.primary)
-                    )
+                item {
+                    Text(text = "Your ringtones")
                 }
-            }
-            items(items = userRingtones){  ringtone ->
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp)
-                        .selectable(
-                            selected = ringtone.uri == pickedRingtone?.uri,
-                            onClick = {
-                                pickedRingtone = ringtone
-                                playRingtone(pickedRingtone as MyRingtone)
-                            },
-                            role = Role.RadioButton
+                item {
+                    IconButton(
+                        onClick = { launcher.launch("audio/*") },
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "add alarm",
+                            tint = MaterialTheme.colorScheme.onPrimary,
+                            modifier = Modifier
+                                .size(48.dp)
+                                .background(MaterialTheme.colorScheme.primary)
                         )
-                ) {
-                    RadioButton(
-                        selected = ringtone.uri == pickedRingtone?.uri,
-                        onClick = null,
-                    )
-                    Text(
-                        text = ringtone.title,
-                        fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                        modifier = Modifier
-                            .padding(start = 16.dp)
-                    )
+                    }
                 }
-            }
-            item {
-                Text(text = "Device ringtones")
-            }
-            items(items = deviceRingtones) { ringtone ->
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp)
-                        .selectable(
-                            selected = ringtone.uri == pickedRingtone?.uri,
-                            onClick = {
-                                pickedRingtone = ringtone
-                                playRingtone(pickedRingtone as MyRingtone)
-                            },
-                            role = Role.RadioButton
-                        )
-                ) {
-                    RadioButton(
-                        selected = ringtone.uri == pickedRingtone?.uri,
-                        onClick = null,
-                    )
-                    Text(
-                        text = ringtone.title,
-                        fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                items(items = userRingtones) { ringtone ->
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
-                            .padding(start = 16.dp)
-                    )
+                            .fillMaxWidth()
+                            .height(50.dp)
+                            .selectable(
+                                selected = ringtone.uri == pickedRingtone.uri,
+                                onClick = {
+                                    pickedRingtone = ringtone
+                                    playRingtone(pickedRingtone)
+                                },
+                                role = Role.RadioButton
+                            )
+                    ) {
+                        RadioButton(
+                            selected = ringtone.uri == pickedRingtone.uri,
+                            onClick = null,
+                        )
+                        Text(
+                            text = ringtone.title,
+                            fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                            modifier = Modifier
+                                .padding(start = 16.dp)
+                        )
+                        Icon(
+                            imageVector = Icons.Default.Clear,
+                            contentDescription = null,
+                            Modifier.clickable {
+                                onEvent(
+                                    RingtonePickerScreenEvent.DeleteUserRingtone(
+                                        state.alarmItem.id,
+                                        ringtone
+                                    )
+                                )
+                            },
+                        )
+                    }
+                }
+                item {
+                    Text(text = "Device ringtones")
+                }
+                items(items = deviceRingtones) { ringtone ->
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(50.dp)
+                            .selectable(
+                                selected = ringtone.uri == pickedRingtone.uri,
+                                onClick = {
+                                    pickedRingtone = ringtone
+                                    playRingtone(pickedRingtone)
+                                },
+                                role = Role.RadioButton
+                            )
+                    ) {
+                        RadioButton(
+                            selected = ringtone.uri == pickedRingtone.uri,
+                            onClick = null,
+                        )
+                        Text(
+                            text = ringtone.title,
+                            fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                            modifier = Modifier
+                                .padding(start = 16.dp)
+                        )
+                    }
                 }
             }
         }

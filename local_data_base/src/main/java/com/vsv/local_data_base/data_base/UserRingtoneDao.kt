@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Upsert
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface UserRingtoneDao {
@@ -18,5 +19,5 @@ interface UserRingtoneDao {
     suspend fun getRingtoneByUri(uri: String): UserRingtoneEntity
 
     @Query("SELECT * FROM user_ringtones")
-    suspend fun getUserRingtoneList(): List<UserRingtoneEntity>
+    fun getUserRingtoneList(): Flow<List<UserRingtoneEntity>>
 }

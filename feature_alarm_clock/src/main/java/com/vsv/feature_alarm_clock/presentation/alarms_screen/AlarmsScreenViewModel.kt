@@ -6,12 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vsv.core.domain.permission_state.RationaleState
 import com.vsv.core.domain.permission_state.RationaleStateRepository
-import com.vsv.core.domain.ringtone.RingtonePicker
 import com.vsv.core.domain.scheduler.ScheduleResult
 import com.vsv.core.domain.use_cases.RationaleStateUseCases
 import com.vsv.core.utils.Event
 import com.vsv.feature_alarm_clock.domain.model.AlarmItem
 import com.vsv.feature_alarm_clock.domain.use_case.AlarmUseCases
+import com.vsv.feature_alarm_clock.domain.use_case.RingtoneUseCases
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -23,7 +23,7 @@ import java.time.LocalTime
 class AlarmsScreenViewModel(
     private val alarmUseCases: AlarmUseCases,
     private val rationaleStateUseCases: RationaleStateUseCases,
-    private val ringtonePicker: RingtonePicker,
+    private val ringtoneUseCases: RingtoneUseCases,
 ) : ViewModel() {
 
     private val _alarms = alarmUseCases.getAlarmsListUseCase().stateIn(
@@ -76,8 +76,7 @@ class AlarmsScreenViewModel(
                         hours = event.hours,
                         minutes = event.minutes,
                         isEnabled = true,
-                        ringtoneUri = ringtonePicker.getRingtone().uri,
-                        ringtoneTitle = ringtonePicker.getRingtone().title
+                        ringtone = ringtoneUseCases.getLastPickedRingtoneUseCase()
                     )
                     when (alarmUseCases.scheduleAlarmUseCase(alarmItem = alarmItem)) {
                         ScheduleResult.Success -> {

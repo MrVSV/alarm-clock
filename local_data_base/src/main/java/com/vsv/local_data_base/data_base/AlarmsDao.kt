@@ -29,4 +29,7 @@ interface AlarmsDao {
 
     @Query("SELECT * FROM alarms WHERE id=:id")
     suspend fun getAlarmById(id: Int): AlarmItemEntity
+
+    @Query("SELECT * FROM alarms WHERE ringtoneUri=:uri")
+    suspend fun getAlarmByRingtoneUri(uri: String): List<AlarmItemEntity>
 }

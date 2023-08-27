@@ -1,5 +1,6 @@
 package com.vsv.feature_alarm_clock.domain.repository
 
+import android.net.Uri
 import com.vsv.core.domain.ringtone.MyRingtone
 import com.vsv.core.domain.scheduler.ScheduleResult
 import com.vsv.feature_alarm_clock.domain.model.AlarmItem
@@ -21,12 +22,16 @@ interface Repository {
 
     suspend fun disableAlarm(alarmItem: AlarmItem)
 
-    suspend fun setRingtone(alarmItemId: Int, myRingtone: MyRingtone)
+    suspend fun setRingtone(alarmItem: AlarmItem, myRingtone: MyRingtone)
 
-    suspend fun getRingtone(): MyRingtone
+    suspend fun getLastPickedRingtone(): MyRingtone
 
-    suspend fun getRingtonesList(): List<MyRingtone>
+    suspend fun getDeviceRingtonesList(): List<MyRingtone>
 
-    suspend fun addUserRingtone(myRingtone: MyRingtone)
+    suspend fun addUserRingtone(uri: Uri)
+
+//    suspend fun deleteUserRingtone(ringtone: MyRingtone)
+
+    fun getUserRingtonesList(): Flow<List<MyRingtone>>
 
 }

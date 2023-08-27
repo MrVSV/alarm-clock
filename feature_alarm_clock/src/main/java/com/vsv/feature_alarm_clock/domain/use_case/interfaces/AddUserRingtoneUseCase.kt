@@ -1,8 +1,8 @@
 package com.vsv.feature_alarm_clock.domain.use_case.interfaces
 
-import com.vsv.core.domain.ringtone.MyRingtone
+import android.net.Uri
 
 interface AddUserRingtoneUseCase {
 
-    suspend operator fun invoke(myRingtone: MyRingtone)
+    suspend operator fun invoke(uri: Uri)
 }

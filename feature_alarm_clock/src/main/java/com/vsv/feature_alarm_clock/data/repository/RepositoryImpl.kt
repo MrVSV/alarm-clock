@@ -1,7 +1,6 @@
 package com.vsv.feature_alarm_clock.data.repository
 
-import android.content.ContentValues.TAG
-import android.util.Log
+import android.net.Uri
 import com.vsv.core.domain.ringtone.MyRingtone
 import com.vsv.core.domain.ringtone.RingtonePicker
 import com.vsv.core.domain.scheduler.ScheduleResult
@@ -28,30 +27,49 @@ class RepositoryImpl(
     private val userRingtoneDao: UserRingtoneDao,
 ) : Repository {
 
-    override suspend fun addUserRingtone(myRingtone: MyRingtone) {
-        userRingtoneDao.addUserRingtone(myRingtone.copy(isUserRingtone = true).toEntity())
+    override suspend fun addUserRingtone(uri: Uri) {
+        userRingtoneDao.addUserRingtone(ringtonePicker.addUserRingtone(uri).toEntity())
     }
 
-    override suspend fun getRingtone(): MyRingtone {
-        return ringtonePicker.getRingtone()
+//    override suspend fun deleteUserRingtone(ringtone: MyRingtone) {
+//        if (ringtonePicker.deleteUserRingtone(ringtone)) {
+//            userRingtoneDao.deleteUserRingtone(ringtone.toEntity())
+//            val defaultRingtone = ringtonePicker.getRingtonesList().first()
+//            val alarms = alarmsDao.getAlarmByRingtoneUri(ringtone.uri)
+//            Log.d(TAG, "deleteUserRingtone: $alarms")
+//            alarms.forEach { alarm ->
+//                alarmsDao.upsertAlarm(
+//                    alarm.copy(
+//                        ringtoneTitle = defaultRingtone.title,
+//                        ringtoneUri = defaultRingtone.uri
+//                    )
+//                )
+//            }
+//        }
+//    }
+
+    override suspend fun getLastPickedRingtone(): MyRingtone {
+        return ringtonePicker.getLastPickedRingtone()
     }
 
-    override suspend fun getRingtonesList(): List<MyRingtone> {
-        val deviceRingtones = ringtonePicker.getRingtonesList()
-        val userRingtones = userRingtoneDao.getUserRingtoneList().toMyRingtoneModelList()
-        Log.d(TAG, "device: ${deviceRingtones.size} user: ${userRingtones.size}")
-        return deviceRingtones + userRingtones
+    override fun getUserRingtonesList(): Flow<List<MyRingtone>> {
+        return userRingtoneDao.getUserRingtoneList().map { entity ->
+            entity.toMyRingtoneModelList()
+        }
     }
 
-    override suspend fun setRingtone(alarmItemId: Int, myRingtone: MyRingtone) {
-        val alarm = alarmsDao.getAlarmById(alarmItemId)
+    override suspend fun getDeviceRingtonesList(): List<MyRingtone> {
+        return ringtonePicker.getRingtonesList()
+    }
+
+    override suspend fun setRingtone(alarmItem: AlarmItem, myRingtone: MyRingtone) {
         alarmsDao.upsertAlarm(
-            alarm.copy(
+            alarmItem.toEntity().copy(
                 ringtoneTitle = myRingtone.title,
                 ringtoneUri = myRingtone.uri
             )
         )
-        ringtonePicker.setRingtone(myRingtone)
+        ringtonePicker.setRingtoneAsLastPicked(myRingtone)
     }
 
     override suspend fun scheduleAlarm(alarmItem: AlarmItem): ScheduleResult {

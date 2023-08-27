@@ -45,7 +45,7 @@ class AlarmService : Service() {
                     mediaPlayer.apply {
                         setDataSource(
                             this@AlarmService,
-                            Uri.parse(alarm.ringtoneUri)
+                            Uri.parse(alarm.ringtone.uri)
                         )
                         prepare()
                         start()

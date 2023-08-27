@@ -11,8 +11,7 @@ val viewModelModule = module {
         AlarmsScreenViewModel(
             alarmUseCases = get(),
             rationaleStateUseCases = get(),
-            ringtonePicker = get()
-
+            ringtoneUseCases = get()
         )
     }
 
