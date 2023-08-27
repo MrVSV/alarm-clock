@@ -31,22 +31,21 @@ class RepositoryImpl(
         userRingtoneDao.addUserRingtone(ringtonePicker.addUserRingtone(uri).toEntity())
     }
 
-//    override suspend fun deleteUserRingtone(ringtone: MyRingtone) {
-//        if (ringtonePicker.deleteUserRingtone(ringtone)) {
-//            userRingtoneDao.deleteUserRingtone(ringtone.toEntity())
-//            val defaultRingtone = ringtonePicker.getRingtonesList().first()
-//            val alarms = alarmsDao.getAlarmByRingtoneUri(ringtone.uri)
-//            Log.d(TAG, "deleteUserRingtone: $alarms")
-//            alarms.forEach { alarm ->
-//                alarmsDao.upsertAlarm(
-//                    alarm.copy(
-//                        ringtoneTitle = defaultRingtone.title,
-//                        ringtoneUri = defaultRingtone.uri
-//                    )
-//                )
-//            }
-//        }
-//    }
+    override suspend fun deleteUserRingtone(ringtone: MyRingtone) {
+        if (ringtonePicker.deleteUserRingtone(ringtone)) {
+            userRingtoneDao.deleteUserRingtone(ringtone.toEntity())
+            val defaultRingtone = ringtonePicker.getRingtonesList().first()
+            val alarms = alarmsDao.getAlarmByRingtoneUri(ringtone.uri)
+            alarms.forEach { alarm ->
+                alarmsDao.upsertAlarm(
+                    alarm.copy(
+                        ringtoneTitle = defaultRingtone.title,
+                        ringtoneUri = defaultRingtone.uri
+                    )
+                )
+            }
+        }
+    }
 
     override suspend fun getLastPickedRingtone(): MyRingtone {
         return ringtonePicker.getLastPickedRingtone()

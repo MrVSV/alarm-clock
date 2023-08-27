@@ -7,7 +7,10 @@ import android.net.Uri
 import androidx.core.net.toUri
 import com.vsv.core.domain.ringtone.MyRingtone
 import com.vsv.core.domain.ringtone.RingtonePicker
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.FileFilter
 import java.io.FileOutputStream
 
 class RingtonePickerImpl(
@@ -71,8 +74,10 @@ class RingtonePickerImpl(
             context.filesDir,
             r.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE).toString()
         )
-        FileOutputStream(file).use {
-            it.write(bytes)
+        withContext(Dispatchers.IO) {
+            FileOutputStream(file).use {
+                it.write(bytes)
+            }
         }
         return MyRingtone(
             uri = file.toUri().toString(),
@@ -81,10 +86,13 @@ class RingtonePickerImpl(
         )
     }
 
-//    override suspend fun deleteUserRingtone(ringtone: MyRingtone): Boolean {
-//        val filter =  FileFilter{ file -> file.toUri().toString() == ringtone.uri }
-//        return context.filesDir.listFiles(filter)?.first()?.delete() ?: false
-//    }
+    override suspend fun deleteUserRingtone(ringtone: MyRingtone): Boolean {
+        val filter = FileFilter{ file -> file.toUri().toString() == ringtone.uri }
+        if (prefs.getString(RINGTONE_URI_KEY, "") == ringtone.uri) {
+            setRingtoneAsLastPicked(getRingtonesList().first())
+        }
+        return context.filesDir.listFiles(filter)?.first()?.delete() ?: false
+    }
 
     private fun getDefaultDeviceRingtone(): MyRingtone {
         val defaultRingtoneUri =

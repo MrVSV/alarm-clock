@@ -128,6 +128,9 @@ fun RingtonePickerScreen(
         var pickedRingtone by remember {
             mutableStateOf(state.alarmItem.ringtone)
         }
+        if (state.userRingtoneHasBeenDeleted) {
+            pickedRingtone = deviceRingtones.first()
+        }
         Scaffold(
             floatingActionButton = {
                 Button(

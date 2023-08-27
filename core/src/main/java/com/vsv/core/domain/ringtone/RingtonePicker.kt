@@ -12,5 +12,5 @@ interface RingtonePicker {
 
     suspend fun addUserRingtone(uri: Uri): MyRingtone
 
-//    suspend fun deleteUserRingtone(ringtone: MyRingtone): Boolean
+    suspend fun deleteUserRingtone(ringtone: MyRingtone): Boolean
 }

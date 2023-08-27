@@ -65,6 +65,12 @@ class RingtonePickerScreenViewModel(
             is RingtonePickerScreenEvent.DeleteUserRingtone -> {
                 viewModelScope.launch {
                     ringtoneUseCases.deleteUserRingtoneUseCase(event.ringtone)
+                    _alarmItem.update { alarmUseCases.getAlarmByIdUseCase(event.alarmItemId) }
+                    _state.update {
+                        it.copy(
+                            userRingtoneHasBeenDeleted = true
+                        )
+                    }
                 }
             }
             is RingtonePickerScreenEvent.GetAlarmById -> {

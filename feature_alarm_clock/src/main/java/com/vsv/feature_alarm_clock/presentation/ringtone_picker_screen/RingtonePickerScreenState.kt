@@ -7,4 +7,5 @@ data class RingtonePickerScreenState (
     val alarmItem: AlarmItem = AlarmItem(),
     val hasItemBeenReceived: Boolean = false,
     val ringtoneList: List<MyRingtone> = emptyList(),
+    val userRingtoneHasBeenDeleted: Boolean = false
 )

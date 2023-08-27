@@ -9,6 +9,6 @@ class DeleteUserRingtoneUseCaseImpl(
 ) : DeleteUserRingtoneUseCase {
 
     override suspend fun invoke(myRingtone: MyRingtone) {
-//        repository.deleteUserRingtone(myRingtone)
+        repository.deleteUserRingtone(myRingtone)
     }
 }

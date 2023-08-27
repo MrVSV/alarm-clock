@@ -30,7 +30,7 @@ interface Repository {
 
     suspend fun addUserRingtone(uri: Uri)
 
-//    suspend fun deleteUserRingtone(ringtone: MyRingtone)
+    suspend fun deleteUserRingtone(ringtone: MyRingtone)
 
     fun getUserRingtonesList(): Flow<List<MyRingtone>>
 
