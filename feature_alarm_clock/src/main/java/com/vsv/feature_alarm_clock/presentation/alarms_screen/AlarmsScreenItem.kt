@@ -1,6 +1,7 @@
 package com.vsv.feature_alarm_clock.presentation.alarms_screen
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -10,6 +11,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedIconToggleButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -22,8 +24,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.vsv.core.domain.navigation.Destination
 import com.vsv.feature_alarm_clock.domain.model.AlarmItem
+import java.time.DayOfWeek
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import java.time.format.TextStyle
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,11 +45,7 @@ fun AlarmsScreenItem(
         String.format("%02d", alarm.hours) + ":" + String.format("%02d", alarm.minutes),
         DateTimeFormatter.ofPattern("HH:mm")
     )
-//    val context = LocalContext.current
-//    if (context.findActivity().intent.action == RingtoneManager.ACTION_RINGTONE_PICKER) {
-//                navController.navigate(Destination.RingtonePickerScreen.route + "/${alarm.id}")
-//
-//    }
+    val days = DayOfWeek.values()
     Card(
         onClick = { },
         modifier = Modifier
@@ -75,17 +76,34 @@ fun AlarmsScreenItem(
                 },
             )
         }
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            modifier = Modifier
+        ) {
+            days.forEachIndexed { index, day ->
+                OutlinedIconToggleButton(
+                    checked = alarm.alarmDays[index],
+                    onCheckedChange = {
+                        onEvent(
+                            AlarmScreenEvent.SetAlarmRepeating(
+                                alarmItem = alarm,
+                                dayIndex = index
+                            )
+                        )
+                    }
+                ) {
+                    Text(
+                        text = day.getDisplayName(
+                            TextStyle.NARROW,
+                            Locale.getDefault()
+                        )
+                    )
+                }
+            }
+        }
         TextButton(
             onClick = {
-//                Intent(RingtoneManager.ACTION_RINGTONE_PICKER).apply {
-//                    putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, alarm.ringtoneUri)
-//                    putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, true)
-//                    putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true)
-//                    putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "select ringtone")
-//                    putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALL)
-//                }.also {
-//                   context.startActivity(it)
-//                }
                 navController.navigate(Destination.RingtonePickerScreen.route + "/${alarm.id}")
             },
             Modifier.padding(start = 16.dp)

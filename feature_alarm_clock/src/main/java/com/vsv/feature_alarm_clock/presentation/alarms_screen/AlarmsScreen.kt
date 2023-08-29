@@ -1,10 +1,8 @@
 package com.vsv.feature_alarm_clock.presentation.alarms_screen
 
 import android.Manifest
-import android.content.ContentValues.TAG
 import android.os.Build
 import android.text.format.DateFormat
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -58,7 +56,6 @@ fun AlarmsScreen(
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranded ->
-        Log.d(TAG, "onResult: $isGranded")
         if (isGranded) onEvent(AlarmScreenEvent.ShowTimePicker(state.selectedAlarm))
         else {
             if (context.findActivity()

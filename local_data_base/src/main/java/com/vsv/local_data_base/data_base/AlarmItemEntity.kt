@@ -13,5 +13,12 @@ data class AlarmItemEntity(
     override val minutes: Int,
     val timeStamp: Long = System.currentTimeMillis(),
     val ringtoneTitle: String,
-    val ringtoneUri: String
+    val ringtoneUri: String,
+    val monday: Boolean,
+    val tuesday: Boolean,
+    val wednesday: Boolean,
+    val thursday: Boolean,
+    val friday: Boolean,
+    val saturday: Boolean,
+    val sunday: Boolean,
 ): Item

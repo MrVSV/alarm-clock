@@ -13,6 +13,7 @@ import com.vsv.feature_alarm_clock.domain.use_case.impl.GetDeviceRingtonesListUs
 import com.vsv.feature_alarm_clock.domain.use_case.impl.GetLastPickedRingtoneUseCaseImpl
 import com.vsv.feature_alarm_clock.domain.use_case.impl.GetUserRingtonesListUseCaseImpl
 import com.vsv.feature_alarm_clock.domain.use_case.impl.ScheduleAlarmUseCaseImpl
+import com.vsv.feature_alarm_clock.domain.use_case.impl.SetAlarmRepeatingUseCaseImpl
 import com.vsv.feature_alarm_clock.domain.use_case.impl.SetRingtoneUseCaseImpl
 import com.vsv.feature_alarm_clock.domain.use_case.interfaces.AddUserRingtoneUseCase
 import com.vsv.feature_alarm_clock.domain.use_case.interfaces.DeleteAlarmUseCase
@@ -25,6 +26,7 @@ import com.vsv.feature_alarm_clock.domain.use_case.interfaces.GetDeviceRingtones
 import com.vsv.feature_alarm_clock.domain.use_case.interfaces.GetLastPickedRingtoneUseCase
 import com.vsv.feature_alarm_clock.domain.use_case.interfaces.GetUserRingtonesListUseCase
 import com.vsv.feature_alarm_clock.domain.use_case.interfaces.ScheduleAlarmUseCase
+import com.vsv.feature_alarm_clock.domain.use_case.interfaces.SetAlarmRepeatingUseCase
 import com.vsv.feature_alarm_clock.domain.use_case.interfaces.SetRingtoneUseCase
 import org.koin.dsl.module
 
@@ -38,6 +40,7 @@ val useCaseModule = module {
             disableAlarmUseCase = get(),
             getAlarmsListUseCase = get(),
             getAlarmByIdUseCase = get(),
+            setAlarmRepeatingUseCase = get()
         )
     }
 
@@ -47,6 +50,7 @@ val useCaseModule = module {
     single<DisableAlarmUseCase> { DisableAlarmUseCaseImpl(repository = get()) }
     single<GetAlarmsListUseCase> { GetAlarmsListUseCaseImpl(repository = get()) }
     single<GetAlarmByIdUseCase> { GetAlarmByIdUseCaseImpl(repository = get()) }
+    single<SetAlarmRepeatingUseCase> { SetAlarmRepeatingUseCaseImpl(repository = get()) }
 
     single {
         RingtoneUseCases(

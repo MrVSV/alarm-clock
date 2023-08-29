@@ -10,6 +10,7 @@ data class AlarmItem(
     val hours: Int = 0,
     val minutes: Int = 0,
     val ringtone: MyRingtone = MyRingtone("", "", false),
+    val alarmDays: List<Boolean> = listOf(false, false, false, false, false, false, false),
 ) {
 
     fun toEntity() = AlarmItemEntity(
@@ -19,6 +20,13 @@ data class AlarmItem(
         minutes = minutes,
         ringtoneTitle = ringtone.title,
         ringtoneUri = ringtone.uri,
+        monday = alarmDays[0],
+        tuesday = alarmDays[1],
+        wednesday = alarmDays[2],
+        thursday = alarmDays[3],
+        friday = alarmDays[4],
+        saturday = alarmDays[5],
+        sunday = alarmDays[6],
     )
 }
 
@@ -31,4 +39,7 @@ fun AlarmItemEntity.toModel(): AlarmItem = AlarmItem(
         uri = ringtoneUri,
         title = ringtoneTitle,
     ),
+    alarmDays =listOf(
+        monday, tuesday, wednesday, thursday, friday, saturday, sunday
+    )
 )

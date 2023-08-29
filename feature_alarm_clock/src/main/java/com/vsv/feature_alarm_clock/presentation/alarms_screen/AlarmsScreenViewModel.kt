@@ -71,8 +71,11 @@ class AlarmsScreenViewModel(
             }
             is AlarmScreenEvent.SetAlarmTime -> {
                 viewModelScope.launch {
-                    val alarmItem = AlarmItem(
-                        id = event.id,
+                    val alarmItem = event.alarmItem?.copy(
+                        hours = event.hours,
+                        minutes = event.minutes
+                    ) ?: AlarmItem(
+                        id = 0,
                         hours = event.hours,
                         minutes = event.minutes,
                         isEnabled = true,
@@ -164,6 +167,14 @@ class AlarmsScreenViewModel(
             is AlarmScreenEvent.EnableAlarm -> {
                 viewModelScope.launch {
                     alarmUseCases.enableAlarmUseCase(alarmItem = event.alarmItem)
+                }
+            }
+            is AlarmScreenEvent.SetAlarmRepeating -> {
+                viewModelScope.launch {
+                    alarmUseCases.setAlarmRepeatingUseCase(
+                        alarmItem = event.alarmItem,
+                        dayIndex = event.dayIndex
+                    )
                 }
             }
         }

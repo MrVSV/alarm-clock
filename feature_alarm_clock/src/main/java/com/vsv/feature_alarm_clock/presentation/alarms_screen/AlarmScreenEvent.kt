@@ -4,12 +4,13 @@ import com.vsv.core.utils.Event
 import com.vsv.feature_alarm_clock.domain.model.AlarmItem
 
 sealed interface AlarmScreenEvent : Event {
-    class SetAlarmTime(val id: Int = 0, val hours: Int, val minutes: Int) : AlarmScreenEvent
+    class SetAlarmTime(val alarmItem: AlarmItem? = null, val hours: Int, val minutes: Int) : AlarmScreenEvent
     class ShowTimePicker(val alarmItem: AlarmItem?) : AlarmScreenEvent
     object CloseTimePicker : AlarmScreenEvent
     class DeleteAlarm(val alarmItem: AlarmItem) : AlarmScreenEvent
     class EnableAlarm(val alarmItem: AlarmItem) : AlarmScreenEvent
     class DisableAlarm(val alarmItem: AlarmItem) : AlarmScreenEvent
+    class SetAlarmRepeating(val alarmItem: AlarmItem, val dayIndex: Int) : AlarmScreenEvent
     object OnSnackbarClose : AlarmScreenEvent
     object ShowAlarmRationale : AlarmScreenEvent
     object ShowNotificationRationale : AlarmScreenEvent

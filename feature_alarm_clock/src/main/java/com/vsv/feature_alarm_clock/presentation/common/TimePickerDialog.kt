@@ -88,7 +88,7 @@ fun TimePickerDialog(
                     Log.d(TAG, "TimePickerDialog confirm: ${state.selectedAlarm}")
                     onEvent(
                         AlarmScreenEvent.SetAlarmTime(
-                            id = state.selectedAlarm?.id ?: 0,
+                            alarmItem = state.selectedAlarm,
                             hours = timePickerState.hour,
                             minutes = timePickerState.minute,
                         )

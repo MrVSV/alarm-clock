@@ -19,10 +19,10 @@ class AlarmScheduler(
 
     private val alarmManager = context.getSystemService(AlarmManager::class.java)
 
-    override fun  schedule(item: Item): ScheduleResult {
+    override fun  schedule(item: Item, daysToAdd: Int): ScheduleResult {
         return try {
             alarmManager.setAlarmClock(
-                setAlarmInfo(item),
+                setAlarmInfo(item, daysToAdd),
                 setAlarmPendingIntent(item)
             )
             ScheduleResult.Success
@@ -39,7 +39,7 @@ class AlarmScheduler(
         alarmManager.cancel(setAlarmPendingIntent(item))
     }
 
-    private fun  setAlarmInfo(item: Item): AlarmClockInfo {
+    private fun  setAlarmInfo(item: Item, daysToAdd: Int): AlarmClockInfo {
         val alarmInfoIntent = Intent("com.vsv.app.mainactivity").apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
@@ -51,7 +51,7 @@ class AlarmScheduler(
         )
         Log.d(TAG, "setAlarmInfo: ${item.hours}:${item.minutes}")
         return AlarmClockInfo(
-            calendar.convertToMillis(item.hours, item.minutes),
+            calendar.convertToMillis(item.hours, item.minutes, daysToAdd),
             alarmInfoPendingIntent
         )
     }
