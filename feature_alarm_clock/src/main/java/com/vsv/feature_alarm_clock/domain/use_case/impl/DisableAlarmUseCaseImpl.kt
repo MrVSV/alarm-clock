@@ -9,6 +9,6 @@ class DisableAlarmUseCaseImpl(
 ) : DisableAlarmUseCase {
 
     override suspend operator fun invoke(alarmItem: AlarmItem) {
-        repository.updateAlarm(alarmItem.copy(isEnabled = false))
+        repository.disableAlarm(alarmItem.copy(isEnabled = false))
     }
 }

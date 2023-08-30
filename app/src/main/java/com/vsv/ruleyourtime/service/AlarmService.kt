@@ -56,10 +56,8 @@ class AlarmService : Service() {
                 itemId = intent.getIntExtra(ALARM_ITEM_ID, 0)
                 job = CoroutineScope(Dispatchers.IO).launch {
                     val alarm = repository.getAlarmById(itemId)
-//                    if (alarm.alarmDays.any { it }){
-//
-//                    }
-                    repository.updateAlarm(alarm.copy(isEnabled = false))
+                    if (alarm.isRepeating()) repository.scheduleAlarm(alarm)
+                    else repository.updateAlarm(alarm.copy(isEnabled = false))
                     job?.cancel()
                 }
                 stopSelf()

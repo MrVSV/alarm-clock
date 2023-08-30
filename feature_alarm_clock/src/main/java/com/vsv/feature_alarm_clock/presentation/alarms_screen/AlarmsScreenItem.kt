@@ -1,5 +1,7 @@
 package com.vsv.feature_alarm_clock.presentation.alarms_screen
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -25,6 +27,7 @@ import androidx.navigation.NavController
 import com.vsv.core.domain.navigation.Destination
 import com.vsv.feature_alarm_clock.domain.model.AlarmItem
 import java.time.DayOfWeek
+import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
@@ -47,7 +50,18 @@ fun AlarmsScreenItem(
     )
     val days = DayOfWeek.values()
     Card(
-        onClick = { },
+        onClick = {
+            val today = LocalDate.now().dayOfWeek.value
+            var i = today
+            repeat(7) {
+                if (!alarm.alarmDays[i - 1]) {
+                    i = if (i == 7) 1 else i + 1
+                } else return@repeat
+            }
+            val daysToAdd = if (i < today) i - today + 7 else i - today
+            Log.d(TAG, "AlarmsScreenItem: $daysToAdd")
+            Log.d(TAG, "AlarmsScreenItem: ${alarm.isRepeating()}")
+        },
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()

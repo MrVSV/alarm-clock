@@ -73,7 +73,7 @@ class RepositoryImpl(
 
     override suspend fun scheduleAlarm(alarmItem: AlarmItem): ScheduleResult {
         alarmsDao.upsertAlarm(alarmItem.toEntity())
-        return alarmScheduler.schedule(alarmsDao.getLastUpdatedAlarm())
+        return alarmScheduler.schedule(alarmsDao.getLastUpdatedAlarm(), alarmItem.alarmDays)
     }
 
     override suspend fun updateAlarm(alarmItem: AlarmItem) {
@@ -88,7 +88,7 @@ class RepositoryImpl(
         var job: Job? = null
         job = CoroutineScope(Dispatchers.IO).launch {
             alarmsDao.getAlarmsForReschedule().forEach {
-                alarmScheduler.schedule(it)
+                alarmScheduler.schedule(it, it.toModel().alarmDays)
             }
             job?.cancel()
         }

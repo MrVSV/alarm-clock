@@ -5,7 +5,7 @@ import com.vsv.core.domain.model.Item
 
 interface Scheduler {
 
-    fun schedule(item: Item, daysToAdd: Int = 1): ScheduleResult
+    fun schedule(item: Item, alarmDays: List<Boolean>): ScheduleResult
 
     fun disable(item: Item)
 

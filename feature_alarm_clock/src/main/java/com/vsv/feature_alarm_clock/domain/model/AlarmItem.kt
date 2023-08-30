@@ -10,8 +10,10 @@ data class AlarmItem(
     val hours: Int = 0,
     val minutes: Int = 0,
     val ringtone: MyRingtone = MyRingtone("", "", false),
-    val alarmDays: List<Boolean> = listOf(false, false, false, false, false, false, false),
+    val alarmDays: List<Boolean> = List(7) { false },
 ) {
+
+    fun isRepeating() = alarmDays.contains(true)
 
     fun toEntity() = AlarmItemEntity(
         id = id,
@@ -39,7 +41,7 @@ fun AlarmItemEntity.toModel(): AlarmItem = AlarmItem(
         uri = ringtoneUri,
         title = ringtoneTitle,
     ),
-    alarmDays =listOf(
+    alarmDays = listOf(
         monday, tuesday, wednesday, thursday, friday, saturday, sunday
     )
 )
